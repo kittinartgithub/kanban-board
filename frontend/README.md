@@ -1,46 +1,62 @@
-# Getting Started with Create React App
+# 🖥️ Kanban Board Frontend (React + TypeScript)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+ระบบ Frontend สำหรับระบบจัดการ Kanban Board (เช่น Trello) พัฒนาโดยใช้ React, TypeScript และเชื่อมต่อกับ API FastAPI
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 📌 เทคโนโลยีที่ใช้
 
-### `npm start`
+- ✅ React 18
+- ✅ TypeScript
+- ✅ React Router v6
+- ✅ Axios (เชื่อม API)
+- ✅ Context API หรือ Zustand (จัดการสถานะ)
+- ✅ CSS Modules หรือ Tailwind (กำหนดเอง)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 📁 โครงสร้างไฟล์
+frontend/
+├── src/
+│   ├── api/                     # API เรียก backend (axios, fetch)
+│   │   ├── auth.ts
+│   │   ├── boards.ts
+│   │   ├── columns.ts
+│   │   ├── tasks.ts
+│   │   ├── tags.ts
+│   │   └── notifications.ts
+│
+│   ├── components/             # UI Components
+│   │   ├── BoardCard.tsx
+│   │   ├── Column.tsx
+│   │   ├── TaskCard.tsx
+│   │   ├── TagLabel.tsx
+│   │   ├── NotificationBell.tsx
+│   │   └── AuthForm.tsx
+│
+│   ├── pages/                  # หน้าหลัก (Page-level components)
+│   │   ├── LoginPage.tsx
+│   │   ├── RegisterPage.tsx
+│   │   ├── BoardPage.tsx       # แสดงทุก board ที่ user เข้าร่วม
+│   │   ├── KanbanPage.tsx      # แสดง columns + tasks ใน board เดียว
+│   │   └── NotificationsPage.tsx
+│
+│   ├── styles/                 # CSS/SCSS
+│   │   └── AuthenticationForm.css
+│
+│   ├── App.tsx                 # Routing หลักของแอป
+│   ├── App.css
+│   ├── index.tsx              # Entry point ReactDOM.render()
+│   └── react-app-env.d.ts
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
 
-### `npm test`
+### 1. ติดตั้ง dependencies
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+cd frontend
+npm install
 
-### `npm run build`
+2. สั่งรัน development server
+npm start
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+🌐 การเชื่อมต่อกับ Backendฃ
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Endpoint หลักของ API อยู่ที่: http://localhost:8000/

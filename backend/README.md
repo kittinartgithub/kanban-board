@@ -21,31 +21,40 @@ backend/
 │   ├── main.py                  # จุดเริ่มต้น FastAPI
 │
 │   ├── core/                    # ตั้งค่าระบบ เช่น security, config
-│   │   └── security.py          # จัดการ JWT, password hash
+│   │   └── security.py          # จัดการ JWT, password hash, auth utils
 │
 │   ├── database.py              # SQLAlchemy: engine, SessionLocal, Base
 │
-│   ├── models/                  # SQLAlchemy models (ตาราง)
+│   ├── models/                  # SQLAlchemy models (ตารางทั้งหมด)
 │   │   ├── user_model.py
 │   │   ├── board_model.py
-│   │   └── task_model.py
+│   │   ├── column_model.py
+│   │   ├── task_model.py
+│   │   ├── tag_model.py
+│   │   └── notification_model.py
 │
-│   ├── schemas/                 # Pydantic schemas (request/response)
+│   ├── schemas/                 # Pydantic schemas (request/response validation)
 │   │   ├── user_schemas.py
 │   │   ├── board_schemas.py
-│   │   └── task_schemas.py
+│   │   ├── column_schemas.py
+│   │   ├── task_schemas.py
+│   │   ├── tag_schemas.py
+│   │   └── notification_schemas.py
 │
-│   ├── routes/                  # API route (endpoint)
+│   ├── routes/                  # API routes
 │   │   ├── auth_route.py        # /auth/login, /auth/register
 │   │   ├── user_route.py        # /users/
 │   │   ├── board_route.py       # /boards/
-│   │   └── task_route.py        # /tasks/
+│   │   ├── column_route.py      # /columns/
+│   │   ├── task_route.py        # /tasks/
+│   │   ├── tag_route.py         # /tags/
+│   │   └── notification_route.py # /notifications/
 │
-│   └── utils/                   # (ถ้ามี) helper function ทั่วไป เช่น email, time
+│   └── utils/                   # (Optional) helper function เช่น format_date
 │       └── __init__.py
 │
-├── requirements.txt             # รายชื่อไลบรารีทั้งหมด
-└── README.md                    # วิธีใช้งาน + รันโปรเจกต์
+├── requirements.txt             # รายชื่อ dependencies
+└── README.md                    # วิธีใช้งานโปรเจกต์ (ไฟล์นี้)
 
 
 ---
