@@ -3,7 +3,7 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey
 from sqlalchemy.orm import relationship
 from app.database import Base
-
+from app.models.tag_model import task_tags
 class TaskModel(Base):
     __tablename__ = "tasks"
 
@@ -16,3 +16,4 @@ class TaskModel(Base):
 
     column = relationship("ColumnModel", backref="tasks")
     assignee = relationship("UserModel", backref="assigned_tasks")
+    tags = relationship("TagModel", secondary=task_tags, back_populates="tasks")

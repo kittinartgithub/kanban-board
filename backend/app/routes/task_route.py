@@ -12,6 +12,7 @@ from jose import jwt, JWTError
 from fastapi.security import OAuth2PasswordBearer
 
 from app.models.notification_model import NotificationModel
+from app.schemas.task_schemas import TaskOutSchema 
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
@@ -72,7 +73,7 @@ def update_task(task_id: int, data: TaskUpdateSchema, db: Session = Depends(get_
 
     return task
 
-# ✅ ลบ Task
+# ลบ Task
 @router.delete("/{task_id}")
 def delete_task(task_id: int, db: Session = Depends(get_db), user_id: int = Depends(get_current_user_id)):
     task = db.query(TaskModel).filter(TaskModel.id == task_id).first()
@@ -81,3 +82,11 @@ def delete_task(task_id: int, db: Session = Depends(get_db), user_id: int = Depe
     db.delete(task)
     db.commit()
     return {"detail": "Task deleted"}
+
+
+@router.get("/{task_id}", response_model=TaskOutSchema)
+def get_task_by_id(task_id: int, db: Session = Depends(get_db), user_id: int = Depends(get_current_user_id)):
+    task = db.query(TaskModel).filter(TaskModel.id == task_id).first()
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return task

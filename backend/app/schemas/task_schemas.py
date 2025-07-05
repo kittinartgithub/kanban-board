@@ -1,7 +1,8 @@
 # app/schemas/task_schemas.py
-
 from pydantic import BaseModel
-from typing import Optional
+from typing import List, Optional
+
+from app.schemas.tag_schemas import TagOutSchema
 
 class TaskCreateSchema(BaseModel):
     name: str
@@ -22,6 +23,9 @@ class TaskOutSchema(BaseModel):
     column_id: int
     position: int
     assignee_id: Optional[int]
-
+    tags: List[TagOutSchema] = []
+    
     class Config:
         from_attributes = True
+
+
