@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { registerUser } from "../api/auth";
+import "../styles/AuthenticationForm.css";
 
 function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -25,7 +26,7 @@ function RegisterPage() {
   };
 
   return (
-    <div>
+    <div className="auth-container">
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
         <input type="text" name="username" onChange={handleChange} placeholder="Username" required />

@@ -1,0 +1,55 @@
+/* AuthForm.css */
+/* css Register and Login */
+
+.auth-container {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 32px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  font-family: 'Segoe UI', sans-serif;
+  background: white;
+}
+
+.auth-container h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 24px;
+  color: #333;
+}
+
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-container input {
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: border-color 0.2s ease-in-out;
+  font-size: 16px;
+}
+
+.auth-container input:focus {
+  outline: none;
+  border-color: #3f51b5;
+}
+
+.auth-container button {
+  padding: 12px;
+  background-color: #3f51b5;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.auth-container button:hover {
+  background-color: #303f9f;
+}
