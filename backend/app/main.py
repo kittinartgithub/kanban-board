@@ -5,8 +5,17 @@ from app.database import engine
 from app.models import user_model
 from app.routes import auth_route, user_route
 
+from app.models import user_model, board_model  # ⬅️ เพิ่ม board_model
+from app.routes import auth_route, user_route, board_route  # ⬅️ เพิ่ม board_route
+
+from app.models import column_model
+from app.routes import column_route
+
 # สร้างตารางตาม model
 user_model.Base.metadata.create_all(bind=engine)
+board_model.Base.metadata.create_all(bind=engine)
+column_model.Base.metadata.create_all(bind=engine)
+
 
 # ✅ สร้าง FastAPI instance
 app = FastAPI()
@@ -21,5 +30,9 @@ app.add_middleware(
 )
 
 # ✅ Register routers
-app.include_router(user_route.router)
 app.include_router(auth_route.router)
+app.include_router(user_route.router)
+app.include_router(board_route.router) 
+app.include_router(column_route.router) 
+
+
