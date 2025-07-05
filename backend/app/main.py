@@ -15,7 +15,7 @@ from app.models import task_model
 from app.routes import task_route
 
 from app.models import notification_model
-
+from app.routes import notification_route
 
 # สร้างตารางตาม model
 user_model.Base.metadata.create_all(bind=engine)
@@ -42,5 +42,5 @@ app.include_router(user_route.router)
 app.include_router(board_route.router) 
 app.include_router(column_route.router) 
 app.include_router(task_route.router)
-
+app.include_router(notification_route.router)
 
