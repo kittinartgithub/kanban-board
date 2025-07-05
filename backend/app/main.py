@@ -5,8 +5,8 @@ from app.database import engine
 from app.models import user_model
 from app.routes import auth_route, user_route
 
-from app.models import user_model, board_model  # ⬅️ เพิ่ม board_model
-from app.routes import auth_route, user_route, board_route  # ⬅️ เพิ่ม board_route
+from app.models import user_model, board_model  
+from app.routes import auth_route, user_route, board_route 
 
 from app.models import column_model
 from app.routes import column_route

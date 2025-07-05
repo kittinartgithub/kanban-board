@@ -1,11 +1,16 @@
+// D:\Data\INTERNSHIP\kanban-board\frontend\src\api\auth.ts
+
 import axios from "axios";
 
-const BASE_URL = "http://127.0.0.1:8000";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
 export const loginUser = async (data: { username: string; password: string }) => {
-  const response = await axios.post(`${BASE_URL}/auth/login`, data);
+  const response = await axios.post(`${API_URL}/auth/login`, data);
   return response.data;
 };
+
+
+
 
 export const registerUser = async (data: {
   username: string;
@@ -14,6 +19,6 @@ export const registerUser = async (data: {
   first_name?: string;
   last_name?: string;
 }) => {
-  const response = await axios.post(`${BASE_URL}/auth/register`, data);
+  const response = await axios.post(`${API_URL}/auth/register`, data);
   return response.data;
 };

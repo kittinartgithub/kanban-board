@@ -1,5 +1,4 @@
-# app/routes/column_route.py
-
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
@@ -10,7 +9,7 @@ from app.core.security import ALGORITHM, SECRET_KEY
 from jose import jwt, JWTError
 from fastapi.security import OAuth2PasswordBearer
 
-router = APIRouter(prefix="/columns", tags=["Columns"])
+router = APIRouter(tags=["Columns"])  
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
@@ -21,8 +20,14 @@ def get_current_user_id(token: str = Depends(oauth2_scheme)):
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-# ✅ สร้าง Column
-@router.post("/", response_model=ColumnOutSchema)
+#  GET: ดึง Columns ทั้งหมดของบอร์ด
+@router.get("/boards/{board_id}/columns", response_model=List[ColumnOutSchema])
+def get_columns_by_board(board_id: int, db: Session = Depends(get_db)):
+    columns = db.query(ColumnModel).filter(ColumnModel.board_id == board_id).all()
+    return columns
+
+#  POST: สร้าง Column
+@router.post("/columns", response_model=ColumnOutSchema)
 def create_column(data: ColumnCreateSchema, db: Session = Depends(get_db), user_id: int = Depends(get_current_user_id)):
     board = db.query(BoardModel).filter(BoardModel.id == data.board_id).first()
     if not board or user_id not in [m.id for m in board.members]:
@@ -34,8 +39,8 @@ def create_column(data: ColumnCreateSchema, db: Session = Depends(get_db), user_
     db.refresh(column)
     return column
 
-# ✅ แก้ชื่อ Column
-@router.put("/{column_id}", response_model=ColumnOutSchema)
+#  PUT: แก้ชื่อ Column
+@router.put("/columns/{column_id}", response_model=ColumnOutSchema)
 def update_column(column_id: int, data: ColumnUpdateSchema, db: Session = Depends(get_db), user_id: int = Depends(get_current_user_id)):
     column = db.query(ColumnModel).filter(ColumnModel.id == column_id).first()
     if not column:
@@ -47,8 +52,8 @@ def update_column(column_id: int, data: ColumnUpdateSchema, db: Session = Depend
     db.commit()
     return column
 
-# ✅ ลบ Column
-@router.delete("/{column_id}")
+#  DELETE: ลบ Column
+@router.delete("/columns/{column_id}")
 def delete_column(column_id: int, db: Session = Depends(get_db), user_id: int = Depends(get_current_user_id)):
     column = db.query(ColumnModel).filter(ColumnModel.id == column_id).first()
     if not column:

@@ -1,0 +1,14 @@
+/* src/styles/Column.css */
+.column {
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  padding: 1rem;
+  width: 16rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.column h3 {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
