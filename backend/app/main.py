@@ -1,29 +1,13 @@
-from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy.orm import Session
-from .database import SessionLocal, engine
-from . import models, schemas
+from fastapi import FastAPI
+from app.models import user_model
+from app.database import engine
+from app.routes import user_route  #  import router
 
-models.Base.metadata.create_all(bind=engine)
+# สร้างตารางตาม model
+user_model.Base.metadata.create_all(bind=engine)
+
+# FastAPI instance
 app = FastAPI()
 
-# DB Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-@app.post("/users", response_model=schemas.UserOut)
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = db.query(models.User).filter(
-        (models.User.email == user.email) | (models.User.username == user.username)
-    ).first()
-    if db_user:
-        raise HTTPException(status_code=400, detail="Username or email already registered")
-
-    new_user = models.User(**user.dict())
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-    return new_user
+# Register router ที่แยกไว้
+app.include_router(user_route.router)

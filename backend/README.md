@@ -17,13 +17,36 @@
 ## 📁 โครงสร้างไฟล์
 backend/
 ├── app/
-│ ├── init.py
-│ ├── main.py # จุดเริ่มต้น API
-│ ├── models.py # ตารางตาม ERD (User, Board, Task, ...)
-│ ├── database.py # เชื่อมต่อ PostgreSQL
-│ └── schemas.py # Pydantic models
-├── requirements.txt # ไลบรารีที่ใช้
-└── README.md # 
+│   ├── __init__.py
+│   ├── main.py                  # จุดเริ่มต้น FastAPI
+│
+│   ├── core/                    # ตั้งค่าระบบ เช่น security, config
+│   │   └── security.py          # จัดการ JWT, password hash
+│
+│   ├── database.py              # SQLAlchemy: engine, SessionLocal, Base
+│
+│   ├── models/                  # SQLAlchemy models (ตาราง)
+│   │   ├── user_model.py
+│   │   ├── board_model.py
+│   │   └── task_model.py
+│
+│   ├── schemas/                 # Pydantic schemas (request/response)
+│   │   ├── user_schemas.py
+│   │   ├── board_schemas.py
+│   │   └── task_schemas.py
+│
+│   ├── routes/                  # API route (endpoint)
+│   │   ├── auth_route.py        # /auth/login, /auth/register
+│   │   ├── user_route.py        # /users/
+│   │   ├── board_route.py       # /boards/
+│   │   └── task_route.py        # /tasks/
+│
+│   └── utils/                   # (ถ้ามี) helper function ทั่วไป เช่น email, time
+│       └── __init__.py
+│
+├── requirements.txt             # รายชื่อไลบรารีทั้งหมด
+└── README.md                    # วิธีใช้งาน + รันโปรเจกต์
+
 
 ---
 
