@@ -11,6 +11,8 @@ from app.core.security import ALGORITHM, SECRET_KEY
 from jose import jwt, JWTError
 from fastapi.security import OAuth2PasswordBearer
 
+from app.models.notification_model import NotificationModel
+
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
@@ -21,7 +23,7 @@ def get_current_user_id(token: str = Depends(oauth2_scheme)):
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-# ✅ สร้าง Task
+#  สร้าง Task
 @router.post("/", response_model=TaskOutSchema)
 def create_task(data: TaskCreateSchema, db: Session = Depends(get_db), user_id: int = Depends(get_current_user_id)):
     column = db.query(ColumnModel).filter(ColumnModel.id == data.column_id).first()
@@ -39,17 +41,35 @@ def create_task(data: TaskCreateSchema, db: Session = Depends(get_db), user_id: 
     db.refresh(task)
     return task
 
-# ✅ แก้ไข Task
+#  แก้ไข Task
 @router.put("/{task_id}", response_model=TaskOutSchema)
 def update_task(task_id: int, data: TaskUpdateSchema, db: Session = Depends(get_db), user_id: int = Depends(get_current_user_id)):
     task = db.query(TaskModel).filter(TaskModel.id == task_id).first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
 
+    # ตรวจสอบการ assign ใหม่
+    is_new_assignee = False
+    if data.assignee_id is not None and data.assignee_id != task.assignee_id:
+        is_new_assignee = True
+
     for attr, value in data.dict(exclude_unset=True).items():
         setattr(task, attr, value)
 
     db.commit()
+
+    #  เพิ่ม Notification ถ้ามีการ assign ใหม่
+    if is_new_assignee:
+        notification = NotificationModel(
+            user_id=data.assignee_id,
+            title="คุณได้รับมอบหมายงานใหม่",
+            message=f"Task: {task.name}",
+            type="task",
+            related_id=task.id
+        )
+        db.add(notification)
+        db.commit()
+
     return task
 
 # ✅ ลบ Task

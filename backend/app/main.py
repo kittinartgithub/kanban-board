@@ -14,12 +14,15 @@ from app.routes import column_route
 from app.models import task_model
 from app.routes import task_route
 
+from app.models import notification_model
+
 
 # สร้างตารางตาม model
 user_model.Base.metadata.create_all(bind=engine)
 board_model.Base.metadata.create_all(bind=engine)
 column_model.Base.metadata.create_all(bind=engine)
 task_model.Base.metadata.create_all(bind=engine)
+notification_model.Base.metadata.create_all(bind=engine)
 
 # ✅ สร้าง FastAPI instance
 app = FastAPI()
