@@ -1,13 +1,13 @@
 from pydantic import BaseModel, EmailStr
 
-class UserCreate(BaseModel):
+class UserCreateSchema(BaseModel):
     username: str
     email: EmailStr
     password_hash: str
     first_name: str = ""
     last_name: str = ""
 
-class UserOut(BaseModel):
+class UserOutSchema(BaseModel):
     id: int
     username: str
     email: str
@@ -15,4 +15,8 @@ class UserOut(BaseModel):
     last_name: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True  # สำหรับ Pydantic v2
+
+class LoginFormSchema(BaseModel):
+    username: str
+    password: str

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from app.models import user_model
 from app.database import engine
-from app.routes import user_route  #  import router
+from app.models import user_model
+from app.routes import auth_route, user_route
 
 # สร้างตารางตาม model
 user_model.Base.metadata.create_all(bind=engine)
@@ -11,3 +11,4 @@ app = FastAPI()
 
 # Register router ที่แยกไว้
 app.include_router(user_route.router)
+app.include_router(auth_route.router)

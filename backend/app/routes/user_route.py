@@ -9,15 +9,15 @@ router = APIRouter(
     tags=["Users"]
 )
 
-@router.post("/", response_model=user_schemas.UserOut)
-def create_user(user: user_schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = db.query(user_model.User).filter(
-        (user_model.User.email == user.email) | (user_model.User.username == user.username)
+@router.post("/", response_model=user_schemas.UserOutSchema)
+def create_user(user: user_schemas.UserCreateSchema, db: Session = Depends(get_db)):
+    db_user = db.query(user_model.UserModel).filter(
+        (user_model.UserModel.email == user.email) | (user_model.UserModel.username == user.username)
     ).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Username or email already registered")
 
-    new_user = user_model.User(**user.dict())
+    new_user = user_model.UserModel(**user.dict())
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
