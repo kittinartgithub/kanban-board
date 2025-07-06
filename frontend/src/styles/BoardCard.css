@@ -1,23 +1,184 @@
+/* Board Card Styles */
 .board-card {
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: #fff;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 1rem;
-  transition: box-shadow 0.2s ease;
+  padding: 16px;
+  margin-bottom: 16px;
   cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .board-card:hover {
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.board-header {
+  margin-bottom: 8px;
 }
 
 .board-name {
-  font-size: 1.1rem;
+  margin: 0 0 8px 0;
+  font-size: 1.2em;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  color: #333;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
 }
 
-.board-meta {
-  font-size: 0.9rem;
-  color: #6b7280;
+.board-name:hover {
+  background-color: #f5f5f5;
+}
+
+.board-name-input {
+  width: 100%;
+  font-size: 1.2em;
+  font-weight: 600;
+  padding: 4px 8px;
+  border: 2px solid #007bff;
+  border-radius: 4px;
+  outline: none;
+  background-color: #fff;
+  margin-bottom: 8px;
+}
+
+.board-description {
+  margin: 0 0 12px 0;
+  font-size: 0.9em;
+  color: #666;
+  line-height: 1.4;
+}
+
+.board-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.board-menu {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* Button Styles */
+.btn-edit {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background-color 0.2s;
+}
+
+.btn-edit:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background-color 0.2s;
+}
+
+.btn-delete:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.btn-save {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background-color 0.2s;
+}
+
+.btn-save:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.btn-cancel {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background-color 0.2s;
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background-color: #5a6268;
+}
+
+/* Disabled state */
+.board-card button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.board-card input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Error and loading states */
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  border: 1px solid #f5c6cb;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-style: italic;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .board-card {
+    padding: 12px;
+  }
+  
+  .board-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .board-menu {
+    margin-left: 0;
+    margin-top: 8px;
+  }
+  
+  .edit-actions {
+    margin-left: 0;
+    margin-top: 8px;
+  }
 }

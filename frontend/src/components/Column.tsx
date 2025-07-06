@@ -1,3 +1,5 @@
+// src/components/Column.tsx
+
 import React, { useEffect, useState } from "react";
 import { getTasks, createTask } from "../api/tasks";
 import TaskCard from "./TaskCard";

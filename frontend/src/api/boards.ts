@@ -26,3 +26,27 @@ export const createBoard = async (name: string) => {
   );
   return response.data;
 };
+
+export const updateBoard = async (boardId: number, name: string) => {
+  const token = localStorage.getItem("token");
+  const response = await axios.put(
+    `${API_URL}/boards/${boardId}`,
+    { name },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
+export const deleteBoard = async (boardId: number) => {
+  const token = localStorage.getItem("token");
+  const response = await axios.delete(`${API_URL}/boards/${boardId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
