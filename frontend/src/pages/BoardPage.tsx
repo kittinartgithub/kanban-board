@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getBoards, createBoard, deleteBoard, updateBoard } from "../api/boards";
 import BoardCard from "../components/BoardCard";
 import ConfirmationDialog from "../components/ConfirmationDialog";
-import "../styles/boards.css";
+import "../styles/BoardPage.css";
 
 interface Board {
   id: number;
@@ -16,13 +16,9 @@ function BoardPage() {
   const [newBoardName, setNewBoardName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [confirmDialog, setConfirmDialog] = useState<{
-    isOpen: boolean;
-    boardId: number | null;
-    boardName: string;
-  }>({
+  const [confirmDialog, setConfirmDialog] = useState({
     isOpen: false,
-    boardId: null,
+    boardId: null as number | null,
     boardName: "",
   });
 
@@ -49,7 +45,7 @@ function BoardPage() {
       setError("กรุณากรอกชื่อกระดาน");
       return;
     }
-    
+
     try {
       setLoading(true);
       const newBoard = await createBoard(newBoardName);
@@ -64,13 +60,13 @@ function BoardPage() {
     }
   };
 
-  const handleDeleteBoard = async (boardId: number) => {
-    const board = boards.find(b => b.id === boardId);
+  const handleDeleteBoard = (boardId: number) => {
+    const board = boards.find((b) => b.id === boardId);
     if (!board) return;
 
     setConfirmDialog({
       isOpen: true,
-      boardId: boardId,
+      boardId,
       boardName: board.name,
     });
   };
@@ -81,7 +77,7 @@ function BoardPage() {
     try {
       setLoading(true);
       await deleteBoard(confirmDialog.boardId);
-      setBoards(boards.filter(board => board.id !== confirmDialog.boardId));
+      setBoards(boards.filter((board) => board.id !== confirmDialog.boardId));
       setError(null);
     } catch (error) {
       console.error("Error deleting board:", error);
@@ -101,13 +97,15 @@ function BoardPage() {
       setError("กรุณากรอกชื่อกระดาน");
       return;
     }
-    
+
     try {
       setLoading(true);
       const updatedBoard = await updateBoard(boardId, newName);
-      setBoards(boards.map(board => 
-        board.id === boardId ? updatedBoard : board
-      ));
+      setBoards(
+        boards.map((board) =>
+          board.id === boardId ? updatedBoard : board
+        )
+      );
       setError(null);
     } catch (error) {
       console.error("Error updating board:", error);
@@ -118,23 +116,20 @@ function BoardPage() {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleCreateBoard();
     }
   };
 
   return (
-    <div className="board-page">
-      <h1 className="title">กระดานของฉัน</h1>
-      
-      {error && (
-        <div className="error-message">
-          {error}
-        </div>
-      )}
-      
+    <div className="board-page-container">
+      <h1 className="board-title">กระดานของฉัน</h1>
+
+      {error && <div className="error-message">{error}</div>}
+
       <div className="board-create">
         <input
+          className="board-input"
           type="text"
           placeholder="ชื่อกระดานใหม่"
           value={newBoardName}
@@ -142,27 +137,33 @@ function BoardPage() {
           onKeyDown={handleKeyDown}
           disabled={loading}
         />
-        <button 
+        <button
+          className="board-create-button"
           onClick={handleCreateBoard}
           disabled={loading || !newBoardName.trim()}
         >
           {loading ? "กำลังสร้าง..." : "สร้างกระดาน"}
         </button>
       </div>
-      
+
       <div className="board-list">
         {loading && boards.length === 0 ? (
           <div className="loading">กำลังโหลด...</div>
-        ) : (
+        ) : boards.length > 0 ? (
           boards.map((board) => (
-            <BoardCard 
-              key={board.id} 
-              board={board} 
+            <BoardCard
+              key={board.id}
+              board={board}
               onDelete={handleDeleteBoard}
               onUpdate={handleUpdateBoard}
               disabled={loading}
             />
           ))
+        ) : (
+          <div className="board-empty-state">
+            <h3>ยังไม่มีบอร์ด</h3>
+            <p>เริ่มต้นด้วยการสร้างกระดานใหม่ด้านบน</p>
+          </div>
         )}
       </div>
 

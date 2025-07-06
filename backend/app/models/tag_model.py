@@ -17,5 +17,6 @@ class TagModel(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50), unique=True, nullable=False)
+    
 
     tasks = relationship("TaskModel", secondary=task_tags, back_populates="tags")

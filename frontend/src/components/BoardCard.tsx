@@ -1,6 +1,7 @@
+// src/components/BoardCard.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/boards.css";
+import "../styles/BoardCard.css";
 
 interface Props {
   board: {
@@ -13,11 +14,11 @@ interface Props {
   disabled?: boolean;
 }
 
-const BoardCard: React.FC<Props> = ({ 
-  board, 
-  onDelete, 
-  onUpdate, 
-  disabled = false 
+const BoardCard: React.FC<Props> = ({
+  board,
+  onDelete,
+  onUpdate,
+  disabled = false,
 }) => {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
@@ -49,29 +50,22 @@ const BoardCard: React.FC<Props> = ({
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (onDelete) {
-      onDelete(board.id);
-    }
+    if (onDelete) onDelete(board.id);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSaveEdit();
-    } else if (e.key === 'Escape') {
-      handleCancelEdit();
-    }
+    if (e.key === "Enter") handleSaveEdit();
+    else if (e.key === "Escape") handleCancelEdit();
   };
 
   const handleNameDoubleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (onUpdate) {
-      handleStartEdit(e);
-    }
+    if (onUpdate) handleStartEdit(e);
   };
 
   return (
-    <div className="board-card" onClick={handleCardClick}>
-      <div className="board-header">
+    <div className="boardcard-card" onClick={handleCardClick}>
+      <div className="boardcard-header">
         {isEditing ? (
           <input
             type="text"
@@ -79,14 +73,14 @@ const BoardCard: React.FC<Props> = ({
             onChange={(e) => setEditName(e.target.value)}
             onKeyDown={handleKeyDown}
             onBlur={handleSaveEdit}
-            className="board-name-input"
+            className="boardcard-name-input"
             autoFocus
             disabled={disabled}
             onClick={(e) => e.stopPropagation()}
           />
         ) : (
-          <h3 
-            className="board-name" 
+          <h3
+            className="boardcard-name"
             onDoubleClick={handleNameDoubleClick}
             title={onUpdate ? "ดับเบิลคลิกเพื่อแก้ไข" : ""}
           >
@@ -94,24 +88,24 @@ const BoardCard: React.FC<Props> = ({
           </h3>
         )}
       </div>
-      
-      <p className="board-description">
+
+      <p className="boardcard-description">
         {board.description || "ไม่มีคำอธิบาย"}
       </p>
-      
+
       {(onDelete || onUpdate) && (
-        <div className="board-actions" onClick={(e) => e.stopPropagation()}>
+        <div className="boardcard-actions" onClick={(e) => e.stopPropagation()}>
           {isEditing ? (
-            <div className="edit-actions">
-              <button 
-                className="btn-save"
+            <div className="boardcard-edit-actions">
+              <button
+                className="boardcard-btn-save"
                 onClick={handleSaveEdit}
                 disabled={disabled || !editName.trim()}
               >
                 บันทึก
               </button>
-              <button 
-                className="btn-cancel"
+              <button
+                className="boardcard-btn-cancel"
                 onClick={handleCancelEdit}
                 disabled={disabled}
               >
@@ -119,23 +113,21 @@ const BoardCard: React.FC<Props> = ({
               </button>
             </div>
           ) : (
-            <div className="board-menu">
+            <div className="boardcard-menu">
               {onUpdate && (
-                <button 
-                  className="btn-edit"
+                <button
+                  className="boardcard-btn-edit"
                   onClick={handleStartEdit}
                   disabled={disabled}
-                  title="แก้ไขชื่อ"
                 >
                   แก้ไข
                 </button>
               )}
               {onDelete && (
-                <button 
-                  className="btn-delete"
+                <button
+                  className="boardcard-btn-delete"
                   onClick={handleDelete}
                   disabled={disabled}
-                  title="ลบกระดาน"
                 >
                   ลบ
                 </button>

@@ -1,19 +1,12 @@
 // src/pages/KanbanPage.tsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getColumns, createColumn } from "../api/columns";
+import axios from "axios";
+import { getColumns, createColumn, updateColumn, deleteColumn } from "../api/columns";
+import { createTask, deleteTask, updateTask } from "../api/tasks";
 import Column from "../components/Column";
 import "../styles/kanban.css";
-import { updateColumn, deleteColumn } from "../api/columns";
-import { updateTask } from "../api/tasks";
-import { createTask, deleteTask } from "../api/tasks";
-
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from "@hello-pangea/dnd";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 
 interface Task {
   id: number;
@@ -22,6 +15,7 @@ interface Task {
   column_id: number;
   position: number;
 }
+
 interface ColumnType {
   id: number;
   name: string;
@@ -34,6 +28,8 @@ const KanbanPage: React.FC = () => {
   const [columns, setColumns] = useState<ColumnType[]>([]);
   const [loading, setLoading] = useState(true);
   const [newColumnName, setNewColumnName] = useState("");
+  const [boardName, setBoardName] = useState("");
+  const token = localStorage.getItem("token");
 
   const fetchColumns = async () => {
     try {
@@ -43,6 +39,30 @@ const KanbanPage: React.FC = () => {
       console.error("โหลด column ไม่สำเร็จ:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchBoardName = async () => {
+    if (!token) {
+      console.warn("ไม่พบ token — ข้ามการโหลดชื่อบอร์ด");
+      return;
+    }
+
+    try {
+      const response = await axios.get(`http://localhost:8000/boards/${boardId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const board = response.data;
+      if (board?.name) {
+        setBoardName(board.name);
+      } else {
+        console.warn("ไม่พบชื่อบอร์ดในข้อมูลที่ได้รับ");
+      }
+    } catch (error: any) {
+      console.error("❌ โหลดชื่อบอร์ดไม่สำเร็จ:", error?.response?.data || error.message);
     }
   };
 
@@ -76,124 +96,112 @@ const KanbanPage: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    fetchColumns();
-  }, [boardId]);
+  const handleAddTask = async (columnId: number, taskName: string) => {
+    try {
+      await createTask(columnId, taskName);
+      fetchColumns();
+    } catch (err) {
+      console.error("เพิ่มการ์ดไม่สำเร็จ:", err);
+    }
+  };
+
+  const handleEditTask = async (taskId: number, updates: Partial<Task>) => {
+    try {
+      await updateTask(taskId, updates);
+      fetchColumns();
+    } catch (err) {
+      console.error("แก้ไขการ์ดไม่สำเร็จ:", err);
+    }
+  };
+
+  const handleDeleteTask = async (taskId: number) => {
+    try {
+      await deleteTask(taskId);
+      fetchColumns();
+    } catch (err) {
+      console.error("ลบการ์ดไม่สำเร็จ:", err);
+    }
+  };
 
   const handleDragEnd = async (result: DropResult) => {
-  const { source, destination, draggableId } = result;
-  if (!destination) return;
+    const { source, destination, draggableId } = result;
+    if (!destination) return;
 
-  const taskId = parseInt(draggableId.replace("task-", ""));
-  const sourceColId = parseInt(source.droppableId.replace("column-", ""));
-  const destColId = parseInt(destination.droppableId.replace("column-", ""));
+    const taskId = parseInt(draggableId.replace("task-", ""));
+    const sourceColId = parseInt(source.droppableId.replace("column-", ""));
+    const destColId = parseInt(destination.droppableId.replace("column-", ""));
 
-  if (sourceColId === destColId && source.index === destination.index) return;
+    if (sourceColId === destColId && source.index === destination.index) return;
 
-  // Update position logic in frontend
-  const updatedColumns = [...columns]; // clone columns
-  const sourceCol = updatedColumns.find((col) => col.id === sourceColId);
-  const destCol = updatedColumns.find((col) => col.id === destColId);
-  if (!sourceCol || !destCol) return;
+    const updatedColumns = [...columns];
+    const sourceCol = updatedColumns.find((col) => col.id === sourceColId);
+    const destCol = updatedColumns.find((col) => col.id === destColId);
+    if (!sourceCol || !destCol) return;
 
-  // ทำให้แต่ละคอลัมน์มี tasks ในตัว (สมมติคุณเก็บ tasks ใน state)
-  const sourceTasks = [...(sourceCol.tasks || [])];
-  const destTasks = sourceColId === destColId ? sourceTasks : [...(destCol.tasks || [])];
+    const sourceTasks = [...(sourceCol.tasks || [])];
+    const destTasks = sourceColId === destColId ? sourceTasks : [...(destCol.tasks || [])];
 
-  const [movedTask] = sourceTasks.splice(source.index, 1);
-  destTasks.splice(destination.index, 0, movedTask);
+    const [movedTask] = sourceTasks.splice(source.index, 1);
+    destTasks.splice(destination.index, 0, movedTask);
 
-  // update task object ให้รู้ว่ามันอยู่คอลัมน์ใหม่และตำแหน่งใหม่
-  try {
-    await updateTask(taskId, {
-      column_id: destColId,
-      position: destination.index,
-    });
+    try {
+      await updateTask(taskId, {
+        column_id: destColId,
+        position: destination.index,
+      });
+      fetchColumns();
+    } catch (err) {
+      console.error("อัปเดต Task ไม่สำเร็จ:", err);
+    }
+  };
 
-    // 🔁 โหลดใหม่หรืออัปเดต tasks ใน state ด้วย
-    fetchColumns(); // หรือ fetchTasks() ถ้ามีแยก
-  } catch (err) {
-    console.error("อัปเดต Task ไม่สำเร็จ:", err);
-  }
-};
-
-
-const handleAddTask = async (columnId: number, taskName: string) => {
-  try {
-    // สมมุติว่าคุณมี createTask(columnId, taskName)
-    await createTask(columnId, taskName);
-    fetchColumns(); // โหลดใหม่
-  } catch (err) {
-    console.error("เพิ่มการ์ดไม่สำเร็จ:", err);
-  }
-};
-
-const handleEditTask = async (
-  taskId: number,
-  updates: Partial<Task>
-) => {
-  try {
-    await updateTask(taskId, updates);
-    fetchColumns(); // โหลดใหม่
-  } catch (err) {
-    console.error("แก้ไขการ์ดไม่สำเร็จ:", err);
-  }
-};
-
-const handleDeleteTask = async (taskId: number) => {
-  try {
-    await deleteTask(taskId);
-    fetchColumns(); // โหลดใหม่
-  } catch (err) {
-    console.error("ลบการ์ดไม่สำเร็จ:", err);
-  }
-};
-
+  useEffect(() => {
+    fetchColumns();
+    fetchBoardName();
+  }, [boardId]);
 
   return (
-  <div className="kanban-container">
-    <h2 className="kanban-header">บอร์ด #{boardId}</h2>
+    <div className="kanban-page">
+      <h2 className="kanban-header">{boardName ? `บอร์ด: ${boardName}` : `บอร์ด #${boardId}`}</h2>
 
-    {loading ? (
-      <p className="kanban-loading">กำลังโหลด...</p>
-    ) : (
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="kanban-columns">
-          {columns.map((col, index) => (
-            <Column
-              key={col.id}
-              id={col.id}
-              name={col.name}
-              index={index}
-              tasks={col.tasks} //  ส่ง tasks เข้าไป
-              onDelete={handleDeleteColumn}
-              onRename={handleRenameColumn}
-              onAddTask={handleAddTask}
-              onEditTask={handleEditTask}
-              onDeleteTask={handleDeleteTask}
-            />
-          ))}
+      {loading ? (
+        <p className="kanban-loading">กำลังโหลด...</p>
+      ) : (
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <div className="kanban-columns">
+            {columns.map((col, index) => (
+              <Column
+                key={col.id}
+                id={col.id}
+                name={col.name}
+                index={index}
+                tasks={col.tasks}
+                onDelete={handleDeleteColumn}
+                onRename={handleRenameColumn}
+                onAddTask={handleAddTask}
+                onEditTask={handleEditTask}
+                onDeleteTask={handleDeleteTask}
+              />
+            ))}
 
-          {/*  กล่องเพิ่มคอลัมน์ใหม่ */}
-          <div className="add-column-box">
-            <h3 className="add-column-title">เพิ่มคอลัมน์ใหม่</h3>
-            <input
-              type="text"
-              className="add-column-input"
-              placeholder="ชื่อคอลัมน์ใหม่"
-              value={newColumnName}
-              onChange={(e) => setNewColumnName(e.target.value)}
-            />
-            <button onClick={handleAddColumn} className="add-column-button">
-              + เพิ่มคอลัมน์
-            </button>
+            <div className="add-column-box">
+              <h3 className="column-title">เพิ่มคอลัมน์ใหม่</h3>
+              <input
+                type="text"
+                className="kanban-input"
+                placeholder="ชื่อคอลัมน์ใหม่"
+                value={newColumnName}
+                onChange={(e) => setNewColumnName(e.target.value)}
+              />
+              <button onClick={handleAddColumn} className="kanban-button">
+                + เพิ่มคอลัมน์
+              </button>
+            </div>
           </div>
-        </div>
-      </DragDropContext>
-    )}
-  </div>
-);
-
-}
+        </DragDropContext>
+      )}
+    </div>
+  );
+};
 
 export default KanbanPage;

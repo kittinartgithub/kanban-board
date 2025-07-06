@@ -1,20 +1,111 @@
-.task-card {
-  background: white;
-  padding: 12px;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-  transition: box-shadow 0.2s;
+.taskcard-container {
+  background: #fff;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 12px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  border: 1px solid #e5e7eb; /* gray-200 */
 }
-.task-card:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+
+.taskcard-container:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
-.task-title {
+
+.taskcard-title {
   font-weight: 600;
-  font-size: 14px;
-  color: #333;
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: #1f2937; /* gray-800 */
 }
-.task-desc {
-  font-size: 12px;
-  color: #666;
+
+.taskcard-desc {
+  font-size: 0.875rem;
+  color: #4b5563; /* gray-600 */
+  margin-bottom: 12px;
+}
+
+.taskcard-input,
+.taskcard-textarea {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  border: 1px solid #d1d5db; /* gray-300 */
+  border-radius: 6px;
+  margin-bottom: 10px;
+  background-color: #f9fafb; /* gray-50 */
+  transition: border-color 0.2s;
+}
+
+.taskcard-input:focus,
+.taskcard-textarea:focus {
+  outline: none;
+  border-color: #3b82f6; /* blue-500 */
+  background-color: #fff;
+}
+
+.taskcard-btn-group {
+  display: flex;
+  gap: 10px;
   margin-top: 4px;
+}
+
+.taskcard-btn-save,
+.taskcard-btn-cancel {
+  font-size: 0.875rem;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.taskcard-btn-save {
+  background-color: #3b82f6; /* blue-500 */
+  color: white;
+}
+
+.taskcard-btn-save:hover {
+  background-color: #2563eb; /* blue-600 */
+}
+
+.taskcard-btn-cancel {
+  background-color: #9ca3af; /* gray-400 */
+  color: white;
+}
+
+.taskcard-btn-cancel:hover {
+  background-color: #6b7280; /* gray-500 */
+}
+
+.taskcard-btn-edit,
+.taskcard-btn-delete {
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 5px 10px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.taskcard-btn-edit {
+  color: #2563eb;
+  background-color: #e0f2fe;
+  border-color: #93c5fd;
+}
+
+.taskcard-btn-edit:hover {
+  background-color: #bfdbfe;
+}
+
+.taskcard-btn-delete {
+  color: #dc2626;
+  background-color: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.taskcard-btn-delete:hover {
+  background-color: #fecaca;
 }

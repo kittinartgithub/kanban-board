@@ -1,7 +1,8 @@
+// src/components/Column.tsx
 import React, { useState } from "react";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import TaskCard from "./TaskCard";
-import { updateTask, deleteTask } from "../api/tasks";
+import "../styles/Column.css";
 
 interface Task {
   id: number;
@@ -37,19 +38,18 @@ const Column: React.FC<ColumnProps> = ({
   const [newTaskName, setNewTaskName] = useState("");
 
   return (
-    <div className="bg-gray-100 rounded shadow p-4 w-64 flex-shrink-0 relative">
-      {/* หัวคอลัมน์ */}
-      <div className="flex items-center justify-between mb-2">
+    <div className="column-container">
+      <div className="column-header">
         {editMode ? (
-          <div className="flex items-center w-full">
+          <div className="column-header-edit">
             <input
-              className="text-lg font-bold flex-grow mr-2"
+              className="column-title-input"
               value={columnName}
               onChange={(e) => setColumnName(e.target.value)}
               autoFocus
             />
             <button
-              className="text-green-600 text-sm mr-1"
+              className="column-btn column-btn-save"
               onClick={() => {
                 setEditMode(false);
                 if (columnName !== name) {
@@ -60,7 +60,7 @@ const Column: React.FC<ColumnProps> = ({
               ✔️
             </button>
             <button
-              className="text-gray-600 text-sm"
+              className="column-btn column-btn-cancel"
               onClick={() => {
                 setEditMode(false);
                 setColumnName(name);
@@ -70,35 +70,34 @@ const Column: React.FC<ColumnProps> = ({
             </button>
           </div>
         ) : (
-          <>
-            <h3 className="text-lg font-bold cursor-pointer flex-grow">
-              {columnName}
-            </h3>
-            <button
-              className="text-blue-600 text-sm ml-1"
-              onClick={() => setEditMode(true)}
-              title="แก้ชื่อ"
-            >
-              แก้
-            </button>
-            <button
-              className="text-red-600 text-sm ml-1"
-              onClick={() => onDelete(id)}
-              title="ลบ"
-            >
-              ลบ
-            </button>
-          </>
+          <div className="column-header-display">
+            <h3 className="column-title">{columnName}</h3>
+            <div className="column-actions">
+              <button
+                className="column-btn column-btn-rename"
+                onClick={() => setEditMode(true)}
+                title="แก้ชื่อ"
+              >
+                แก้
+              </button>
+              <button
+                className="column-btn column-btn-delete"
+                onClick={() => onDelete(id)}
+                title="ลบ"
+              >
+                ลบ
+              </button>
+            </div>
+          </div>
         )}
       </div>
 
-      {/* รายการการ์ด */}
       <Droppable droppableId={id.toString()}>
         {(provided) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="task-list"
+            className="column-task-list"
           >
             {tasks.map((task, index) => (
               <Draggable
@@ -128,23 +127,22 @@ const Column: React.FC<ColumnProps> = ({
         )}
       </Droppable>
 
-      {/* เพิ่มการ์ดใหม่ */}
-      <div className="mt-4">
+      <div className="column-add-task">
         <input
           type="text"
-          className="w-full border rounded px-2 py-1"
+          className="column-input"
           placeholder="ชื่อการ์ดใหม่"
           value={newTaskName}
           onChange={(e) => setNewTaskName(e.target.value)}
         />
         <button
+          className="column-button"
           onClick={() => {
             if (newTaskName.trim()) {
               onAddTask(id, newTaskName);
               setNewTaskName("");
             }
           }}
-          className="bg-green-600 text-white px-2 py-1 mt-2 w-full rounded hover:bg-green-700"
         >
           + เพิ่มการ์ด
         </button>

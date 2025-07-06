@@ -1,45 +1,155 @@
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #6a00ff, #ffd500);
+}
+
+/* แก้ไข board-page-container */
 .board-page-container {
-  max-width: 960px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
-  font-family: sans-serif;
+  padding: 40px 20px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  color: white;
+  /* ลบ background ออก */
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* ป้องกัน horizontal scroll */
+}
+/* === Title with Gradient Glow === */
 .board-title {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
+  font-size: 3.8rem;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 40px;
+  background: linear-gradient(45deg, #e8ffa1, #6afff5, #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glow 2s ease-in-out infinite alternate;
 }
 
-.board-create-section {
+@keyframes glow {
+  from {
+    text-shadow: 0 0 20px #ff6b6b55;
+  }
+  to {
+    text-shadow: 0 0 35px #4ecdc455, 0 0 50px #45b7d155;
+  }
+}
+
+/* === Create Board Form === */
+.board-create {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: 16px;
+  background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #333;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  margin-bottom: 40px;
 }
 
 .board-input {
   flex: 1;
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  padding: 18px 20px;
+  font-size: 18px;
+  border: 2px solid #333;
+  border-radius: 14px;
+  background: #111;
+  color: white;
+  outline: none;
+  transition: 0.3s ease;
+}
+
+.board-input:focus {
+  border-color: #ff6b6b;
+  box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1);
+  background: #1f1f1f;
+}
+
+.board-input::placeholder {
+  color: #777;
 }
 
 .board-create-button {
-  padding: 0.5rem 1rem;
-  background-color: #3b82f6;
+  padding: 18px 28px;
+  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
   color: white;
+  font-size: 18px;
+  font-weight: 600;
   border: none;
-  border-radius: 6px;
+  border-radius: 14px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(255, 107, 107, 0.3);
 }
 
 .board-create-button:hover {
-  background-color: #2563eb;
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #ff4e4e, #ff7c7c);
+  box-shadow: 0 12px 32px rgba(255, 107, 107, 0.4);
 }
 
+/* === Board List === */
 .board-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+/* === Empty State === */
+.board-empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: #888;
+  font-size: 1.2rem;
+}
+
+.board-empty-state::before {
+  content: '📋';
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.board-empty-state h3 {
+  font-size: 2rem;
+  color: #bbb;
+}
+
+/* === Loading & Error === */
+.loading,
+.error-message {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 1.2rem;
+  color: #ff6b6b;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .board-title {
+    font-size: 2.8rem;
+  }
+
+  .board-create {
+    flex-direction: column;
+  }
+
+  .board-input,
+  .board-create-button {
+    width: 100%;
+  }
 }

@@ -99,3 +99,22 @@ def get_my_boards(db: Session = Depends(get_db), user_id: int = Depends(get_curr
             members=[u.id for u in b.members]
         ) for b in boards
     ]
+
+#  ดูบอร์ดตาม ID
+@router.get("/{board_id}", response_model=BoardOutSchema)
+def get_board(board_id: int, db: Session = Depends(get_db), user_id: int = Depends(get_current_user_id)):
+    board = db.query(BoardModel).filter(BoardModel.id == board_id).first()
+    if not board:
+        raise HTTPException(status_code=404, detail="Board not found")
+    
+    # ตรวจสอบว่า user นี้เป็น member ของ board หรือไม่
+    user = db.query(UserModel).get(user_id)
+    if user not in board.members:
+        raise HTTPException(status_code=403, detail="No permission to view this board")
+    
+    return BoardOutSchema(
+        id=board.id,
+        name=board.name,
+        owner_id=board.owner_id,
+        members=[u.id for u in board.members]
+    )

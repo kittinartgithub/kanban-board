@@ -15,37 +15,59 @@
 
 ## 📁 โครงสร้างไฟล์
 frontend/
+├── public/
+│   └── ...                     # ไฟล์ static เช่น index.html, icons
+│
 ├── src/
-│   ├── api/                     # API เรียก backend (axios, fetch)
+│   ├── api/                   # API เรียก backend (axios, fetch)
 │   │   ├── auth.ts
 │   │   ├── boards.ts
 │   │   ├── columns.ts
 │   │   ├── tasks.ts
-│   │   ├── tags.ts
-│   │   └── notifications.ts
+│   │   └── tags.ts
 │
-│   ├── components/             # UI Components
+│   ├── components/            # ส่วนประกอบ UI (Component-level)
+│   │   ├── AddColumnButton.tsx
 │   │   ├── BoardCard.tsx
 │   │   ├── Column.tsx
-│   │   ├── TaskCard.tsx
-│   │   ├── TagLabel.tsx
-│   │   ├── NotificationBell.tsx
-│   │   └── AuthForm.tsx
+│   │   ├── ConfirmationDialog.tsx
+│   │   ├── CreateBoardPopup.tsx
+│   │   ├── Navbar.tsx
+│   │   └── TaskCard.tsx
 │
-│   ├── pages/                  # หน้าหลัก (Page-level components)
+│   ├── pages/                 # หน้า Page-level components
+│   │   ├── BoardPage.tsx
+│   │   ├── KanbanPage.tsx
 │   │   ├── LoginPage.tsx
-│   │   ├── RegisterPage.tsx
-│   │   ├── BoardPage.tsx       # แสดงทุก board ที่ user เข้าร่วม
-│   │   ├── KanbanPage.tsx      # แสดง columns + tasks ใน board เดียว
-│   │   └── NotificationsPage.tsx
+│   │   └── RegisterPage.tsx
 │
-│   ├── styles/                 # CSS/SCSS
-│   │   └── AuthenticationForm.css
+│   ├── styles/                # ไฟล์ CSS เฉพาะแต่ละ component/page
+│   │   ├── AddColumnButton.css
+│   │   ├── AuthenticationForm.css
+│   │   ├── BoardCard.css
+│   │   ├── BoardPage.css
+│   │   ├── boards.css
+│   │   ├── Column.css
+│   │   ├── confirmation-dialog.css
+│   │   ├── CreateBoardPopup.css
+│   │   ├── kanban.css
+│   │   ├── LoginPage.css
+│   │   ├── Navbar.css
+│   │   ├── RegisterPage.css
+│   │   └── TaskCard.css
 │
-│   ├── App.tsx                 # Routing หลักของแอป
+│   ├── App.tsx                # Routing หลักของแอป
 │   ├── App.css
-│   ├── index.tsx              # Entry point ReactDOM.render()
+│   ├── index.tsx             # Entry point
 │   └── react-app-env.d.ts
+│
+├── .env
+├── .gitignore
+├── package.json
+├── package-lock.json
+├── README.md
+└── tsconfig.json
+
 
 
 ### 1. ติดตั้ง dependencies

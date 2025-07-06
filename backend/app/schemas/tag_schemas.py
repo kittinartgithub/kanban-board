@@ -1,17 +1,17 @@
-# app/schemas/tag_schemas.py
-
 from pydantic import BaseModel
-from typing import List
+from typing import Optional
 
-class TagCreateSchema(BaseModel):
+#  สำหรับสร้าง tag
+class TagSchema(BaseModel):
     name: str
+    color: Optional[str] = None
 
+#  สำหรับแสดงผล tag กลับไปยัง frontend
 class TagOutSchema(BaseModel):
     id: int
     name: str
+    color: Optional[str] = None
 
-    class Config:
-        from_attributes = True
-
-class TagAssignSchema(BaseModel):
-    tag_ids: List[int]
+    model_config = {
+        "from_attributes": True  # สำหรับ pydantic v2 ขึ้นไป
+    }

@@ -2,53 +2,223 @@
 
 .navbar {
   width: 100%;
-  background-color: #1f2937; /* gray-800 */
+  background: linear-gradient(135deg, #0f172a, #1e293b, #334155);
   color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.navbar:hover {
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
 }
 
 .navbar-title {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 700;
   cursor: pointer;
-  transition: color 0.2s ease-in-out;
+  transition: all 0.3s ease;
+  background: linear-gradient(45deg, #60a5fa, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 30px rgba(96, 165, 250, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.navbar-title::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.navbar-title:hover::before {
+  left: 100%;
 }
 
 .navbar-title:hover {
-  color: #93c5fd; /* blue-300 */
+  transform: scale(1.05);
+  filter: brightness(1.2);
 }
 
 .navbar-actions {
   display: flex;
-  gap: 12px;
+  gap: 16px;
+  align-items: center;
 }
 
 .btn {
-  padding: 8px 16px;
+  padding: 12px 24px;
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transition: all 0.3s ease;
   color: white;
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .create-btn {
-  background-color: #2563eb; /* blue-600 */
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8, #1e40af);
+  border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
 .create-btn:hover {
-  background-color: #3b82f6; /* blue-500 */
+  background: linear-gradient(135deg, #60a5fa, #3b82f6, #2563eb);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
 }
 
 .logout-btn {
-  background-color: #dc2626; /* red-600 */
+  background: linear-gradient(135deg, #ef4444, #dc2626, #b91c1c);
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .logout-btn:hover {
-  background-color: #ef4444; /* red-500 */
+  background: linear-gradient(135deg, #f87171, #ef4444, #dc2626);
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+}
+
+/* เพิ่มเอฟเฟกต์ particle สำหรับ navbar */
+.navbar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 20%, rgba(96, 165, 250, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(167, 139, 250, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 40% 40%, rgba(244, 114, 182, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  animation: particles 10s ease-in-out infinite;
+}
+
+@keyframes particles {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 12px 16px;
+  }
+  
+  .navbar-title {
+    font-size: 20px;
+  }
+  
+  .navbar-actions {
+    gap: 8px;
+  }
+  
+  .btn {
+    padding: 10px 16px;
+    font-size: 12px;
+  }
+}
+
+/* เพิ่มการเคลื่อนไหวเมื่อโหลดหน้า */
+.navbar {
+  animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.navbar-title {
+  animation: fadeInScale 0.8s ease-out 0.2s both;
+}
+
+.btn {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.btn:nth-child(1) {
+  animation-delay: 0.4s;
+}
+
+.btn:nth-child(2) {
+  animation-delay: 0.6s;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
