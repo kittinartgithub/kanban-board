@@ -29,3 +29,19 @@ export const createTask = async (columnId: number, name: string) => {
   );
   return response.data;
 };
+
+export const updateTask = async (taskId: number, updates: any) => {
+  const token = localStorage.getItem("token");
+  const res = await axios.put(`${API_URL}/tasks/${taskId}`, updates, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};
+
+export const deleteTask = async (taskId: number) => {
+  const token = localStorage.getItem("token");
+  const res = await axios.delete(`${API_URL}/tasks/${taskId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};

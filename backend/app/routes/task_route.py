@@ -20,7 +20,7 @@ router = APIRouter(prefix="/tasks", tags=["Tasks"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
-# ✅ ดึง user_id จาก token
+#  ดึง user_id จาก token
 def get_current_user_id(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -29,7 +29,7 @@ def get_current_user_id(token: str = Depends(oauth2_scheme)):
         raise HTTPException(status_code=401, detail="Invalid token")
 
 
-# ✅ สร้าง Task ใหม่
+#  สร้าง Task ใหม่
 @router.post("/", response_model=TaskOutSchema)
 def create_task(
     data: TaskCreateSchema,
@@ -52,7 +52,7 @@ def create_task(
     return task
 
 
-# ✅ แก้ไข Task
+#  แก้ไข Task
 @router.put("/{task_id}", response_model=TaskOutSchema)
 def update_task(
     task_id: int,
@@ -87,7 +87,7 @@ def update_task(
     return task
 
 
-# ✅ ลบ Task
+#  ลบ Task
 @router.delete("/{task_id}")
 def delete_task(
     task_id: int,
@@ -102,7 +102,7 @@ def delete_task(
     return {"detail": "Task deleted"}
 
 
-# ✅ ดึง Task แบบรายตัว
+#  ดึง Task แบบรายตัว
 @router.get("/{task_id}", response_model=TaskOutSchema)
 def get_task_by_id(
     task_id: int,
@@ -115,7 +115,7 @@ def get_task_by_id(
     return task
 
 
-# ✅ ดึง Task ทั้งหมดใน Column
+#  ดึง Task ทั้งหมดใน Column
 @router.get("/columns/{column_id}/tasks", response_model=List[TaskOutSchema])
 def get_tasks_by_column(
     column_id: int,
