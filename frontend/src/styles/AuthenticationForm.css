@@ -1,22 +1,29 @@
-/* AuthForm.css */
-/* css Register and Login */
+/* src/styles/AuthenticationForm.css */
+
+.auth-page {
+  min-height: 100vh;
+  background-color: #f4f5f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
 
 .auth-container {
+  width: 100%;
   max-width: 400px;
-  margin: 80px auto;
+  background-color: #fff;
   padding: 32px;
-  border: 1px solid #e0e0e0;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   font-family: 'Segoe UI', sans-serif;
-  background: white;
 }
 
 .auth-container h2 {
   text-align: center;
+  font-size: 22px;
+  color: #172b4d;
   margin-bottom: 24px;
-  font-size: 24px;
-  color: #333;
 }
 
 .auth-container form {
@@ -25,31 +32,49 @@
 }
 
 .auth-container input {
-  margin-bottom: 16px;
   padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  transition: border-color 0.2s ease-in-out;
-  font-size: 16px;
+  margin-bottom: 16px;
+  font-size: 15px;
+  border: 1px solid #dcdfe4;
+  border-radius: 6px;
+  transition: border-color 0.2s;
 }
 
 .auth-container input:focus {
+  border-color: #0052cc;
   outline: none;
-  border-color: #3f51b5;
 }
 
 .auth-container button {
   padding: 12px;
-  background-color: #3f51b5;
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
+  background-color: #0052cc;
+  color: #ffffff;
+  font-weight: 600;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
+  font-size: 15px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s;
 }
 
 .auth-container button:hover {
-  background-color: #303f9f;
+  background-color: #0747a6;
+}
+
+
+.auth-switch {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+  color: #5e6c84;
+}
+
+.auth-switch a {
+  color: #0052cc;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
 }

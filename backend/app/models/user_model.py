@@ -12,3 +12,7 @@ class UserModel(Base):
     last_name = Column(String(100))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    @property
+    def full_name(self):
+        return f"{self.first_name or ''} {self.last_name or ''}".strip()

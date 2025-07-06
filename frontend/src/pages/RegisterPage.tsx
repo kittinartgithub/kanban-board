@@ -1,5 +1,7 @@
+// src/pages/RegisterPage.tsx
 import { useState } from "react";
 import { registerUser } from "../api/auth";
+import { Link } from "react-router-dom";
 import "../styles/AuthenticationForm.css";
 
 function RegisterPage() {
@@ -26,16 +28,49 @@ function RegisterPage() {
   };
 
   return (
-    <div className="auth-container">
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="username" onChange={handleChange} placeholder="Username" required />
-        <input type="email" name="email" onChange={handleChange} placeholder="Email" required />
-        <input type="password" name="password_hash" onChange={handleChange} placeholder="Password" required />
-        <input type="text" name="first_name" onChange={handleChange} placeholder="First Name" />
-        <input type="text" name="last_name" onChange={handleChange} placeholder="Last Name" />
-        <button type="submit">Register</button>
-      </form>
+    <div className="auth-page">
+      <div className="auth-container">
+        <h2>ลงทะเบียน</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="username"
+            placeholder="ชื่อผู้ใช้"
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="อีเมล"
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="password"
+            name="password_hash"
+            placeholder="รหัสผ่าน"
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="text"
+            name="first_name"
+            placeholder="ชื่อจริง"
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="last_name"
+            placeholder="นามสกุล"
+            onChange={handleChange}
+          />
+          <button type="submit">ลงทะเบียน</button>
+        </form>
+        <p className="auth-switch">
+          มีบัญชีอยู่แล้ว? <Link to="/login">เข้าสู่ระบบ</Link>
+        </p>
+      </div>
     </div>
   );
 }
