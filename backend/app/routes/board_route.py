@@ -118,3 +118,21 @@ def get_board(board_id: int, db: Session = Depends(get_db), user_id: int = Depen
         owner_id=board.owner_id,
         members=[u.id for u in board.members]
     )
+    
+# ดึงสมาชิกทั้งหมดในบอร์ด
+@router.get("/{board_id}/members")
+def get_board_members(board_id: int, db: Session = Depends(get_db), user_id: int = Depends(get_current_user_id)):
+    board = db.query(BoardModel).filter(BoardModel.id == board_id).first()
+    if not board:
+        raise HTTPException(status_code=404, detail="Board not found")
+
+    # ตรวจสอบว่า requester เป็นเจ้าของหรือสมาชิก
+    is_owner = board.owner_id == user_id
+    is_member = db.query(board_members).filter_by(board_id=board_id, user_id=user_id).first()
+    if not is_owner and not is_member:
+        raise HTTPException(status_code=403, detail="No access to this board")
+
+    # ดึงข้อมูลสมาชิก
+    members = db.query(UserModel).join(board_members).filter(board_members.c.board_id == board_id).all()
+
+    return members

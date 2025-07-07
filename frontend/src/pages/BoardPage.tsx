@@ -11,6 +11,12 @@ interface Board {
   members: number[];
 }
 
+interface User {
+  id: number;
+  username: string;
+  full_name: string;
+}
+
 function BoardPage() {
   const [boards, setBoards] = useState<Board[]>([]);
   const [newBoardName, setNewBoardName] = useState("");

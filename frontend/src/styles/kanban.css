@@ -332,3 +332,63 @@
     width: 260px;
   }
 }
+
+/* Members List */
+.members-list {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  position: fixed;
+  top: 80px; /* เพิ่มความสูงเพื่อให้อยู่ใต้ navbar */
+  right: 20px;
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+}
+
+/* Title Style */
+.members-list h3 {
+  margin: 0 0 15px 0;
+  
+  color: #333;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+
+/* แก้ให้กล่องสมาชิกไม่โดดเด่น และจัดชิดขวา */
+.members-list {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  width: 160px;
+  font-size: 0.9rem;
+}
+
+.members-list h3 {
+  margin: 0 0 8px 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.members-list ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.members-list li {
+  margin-bottom: 4px;
+  color: #666;
+  font-size: 0.85rem;
+}

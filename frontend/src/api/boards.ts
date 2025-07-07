@@ -90,3 +90,15 @@ export const respondToInvitation = async (inviteId: number, status: "accepted" |
     }
   }
 };
+
+
+// ฟังก์ชันดึงสมาชิกในบอร์ด
+export const getBoardMembers = async (boardId: number) => {
+  const token = localStorage.getItem("token");
+  const response = await axios.get(`${API_URL}/boards/${boardId}/members`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};

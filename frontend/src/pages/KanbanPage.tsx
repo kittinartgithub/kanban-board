@@ -1,3 +1,4 @@
+// D:\Data\INTERNSHIP\kanban-board\frontend\src\pages\KanbanPage.tsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -21,12 +22,17 @@ interface ColumnType {
   tasks: Task[];
 }
 
+interface User {
+  id: number;
+  username: string;
+  full_name: string;
+}
+
 const gradientOptions = [
   { label: "ม่วง-น้ำเงิน", value: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" },
   { label: "ชมพู-แดง", value: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)" },
   { label: "เขียว-ฟ้า", value: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)" },
   { label: "ฟ้า-น้ำเงินเข้ม", value: "linear-gradient(135deg, #30cfd0 0%, #330867 100%)" },
-
   { label: "พาสเทล ฟ้า-ชมพู", value: "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)" },
   { label: "พาสเทล เหลือง-ส้ม", value: "linear-gradient(135deg, #fddb92 0%, #d1fdff 100%)" },
   { label: "พาสเทล เขียว-ฟ้า", value: "linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)" },
@@ -38,12 +44,14 @@ const KanbanPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const boardId = Number(id);
   const [columns, setColumns] = useState<ColumnType[]>([]);
+  const [users, setUsers] = useState<User[]>([]); // เพื่อเก็บข้อมูลสมาชิกบอร์ด
   const [loading, setLoading] = useState(true);
   const [newColumnName, setNewColumnName] = useState("");
   const [boardName, setBoardName] = useState("");
   const [backgroundGradient, setBackgroundGradient] = useState(
     localStorage.getItem("kanbanGradient") || gradientOptions[0].value
   );
+  const [error, setError] = useState<string | null>(null);
 
   const token = localStorage.getItem("token");
 
@@ -53,6 +61,7 @@ const KanbanPage: React.FC = () => {
       setColumns(data);
     } catch (err) {
       console.error("โหลด column ไม่สำเร็จ:", err);
+      setError("ไม่สามารถโหลดคอลัมน์ได้");
     } finally {
       setLoading(false);
     }
@@ -79,6 +88,29 @@ const KanbanPage: React.FC = () => {
       }
     } catch (error: any) {
       console.error("❌ โหลดชื่อบอร์ดไม่สำเร็จ:", error?.response?.data || error.message);
+    }
+  };
+
+  const fetchUsers = async () => {
+    if (!token) {
+      console.warn("ไม่พบ token — ข้ามการโหลดสมาชิก");
+      return;
+    }
+
+    try {
+      console.log("🔄 กำลังดึงข้อมูลสมาชิก boardId:", boardId);
+      const response = await axios.get(`http://localhost:8000/boards/${boardId}/members`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      console.log("✅ ข้อมูลสมาชิกที่ได้รับ:", response.data);
+      setUsers(response.data);
+      setError(null);
+    } catch (error: any) {
+      console.error("❌ ไม่สามารถโหลดสมาชิกบอร์ดได้:", error?.response?.data || error.message);
+      setError("ไม่สามารถโหลดสมาชิกบอร์ดได้");
     }
   };
 
@@ -177,31 +209,67 @@ const KanbanPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchColumns();
-    fetchBoardName();
+    console.log("🚀 KanbanPage useEffect - boardId:", boardId);
+    if (boardId && !isNaN(boardId)) {
+      fetchColumns();
+      fetchBoardName();
+      fetchUsers(); // เรียกใช้งานฟังก์ชันดึงสมาชิก
+    }
   }, [boardId]);
 
   return (
     <div className="kanban-page" style={{ background: backgroundGradient }}>
       <h2 className="kanban-header">{boardName ? `บอร์ด: ${boardName}` : `บอร์ด #${boardId}`}</h2>
 
+      {/* แสดง Error หากมี */}
+      {error && (
+        <div className="error-message" style={{ color: 'red', marginBottom: '10px' }}>
+          {error}
+        </div>
+      )}
+
+      {/* แสดงสมาชิกที่มีสิทธิ์ในบอร์ด */}
+      <div className="members-list" style={{ 
+        background: 'rgba(255, 255, 255, 0.9)', 
+        padding: '15px', 
+        borderRadius: '8px', 
+        marginBottom: '20px',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+      }}>
+        <h3 style={{ margin: '0 0 10px 0', color: '#333' }}>สมาชิกบอร์ด</h3>
+        {users.length > 0 ? (
+          <ul style={{ margin: 0, padding: '0 0 0 20px' }}>
+            {users.map((user) => (
+              <li key={user.id} style={{ marginBottom: '5px', color: '#666' }}>
+                {user.full_name} ({user.username})
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p style={{ margin: 0, color: '#666', fontStyle: 'italic' }}>
+            {loading ? "กำลังโหลดสมาชิก..." : "ไม่พบสมาชิกในบอร์ด"}
+          </p>
+        )}
+      </div>
+
+      {/* พื้นหลังการเลือก */}
       <div className="gradient-selector">
-  <label htmlFor="gradientSelect" className="gradient-label">
-    🎨 พื้นหลัง:
-  </label>
-  <select
-    id="gradientSelect"
-    value={backgroundGradient}
-    onChange={(e) => handleGradientChange(e.target.value)}
-    className="gradient-dropdown"
-  >
-    {gradientOptions.map((option) => (
-      <option key={option.value} value={option.value}>
-        {option.label}
-      </option>
-    ))}
-  </select>
-</div>
+        <label htmlFor="gradientSelect" className="gradient-label">
+          🎨 พื้นหลัง:
+        </label>
+        <select
+          id="gradientSelect"
+          value={backgroundGradient}
+          onChange={(e) => handleGradientChange(e.target.value)}
+          className="gradient-dropdown"
+        >
+          {gradientOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {loading ? (
         <p className="kanban-loading">กำลังโหลด...</p>

@@ -1,3 +1,4 @@
+// D:\Data\INTERNSHIP\kanban-board\frontend\src\components\TaskCard.tsx
 import React, { useState, useEffect } from "react";
 // import { Tag, getTaskTags, getTags, assignTagsToTask, createTag } from "../api/tags"; // ปิดการใช้งาน tag
 import "../styles/TaskCard.css"; 
