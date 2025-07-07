@@ -15,8 +15,12 @@ class UserOutSchema(BaseModel):
     first_name: str
     last_name: str
 
+    @property
+    def full_name(self) -> str:
+        return f"{self.first_name} {self.last_name}".strip()
+
     class Config:
-        from_attributes = True  # สำหรับ Pydantic v2
+        from_attributes = True
 
 class LoginFormSchema(BaseModel):
     username: str

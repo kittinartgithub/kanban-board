@@ -5,7 +5,7 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   margin-bottom: 12px;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
-  border: 1px solid #e5e7eb; /* gray-200 */
+  border: 1px solid #e5e7eb;
 }
 
 .taskcard-container:hover {
@@ -17,13 +17,14 @@
   font-weight: 600;
   font-size: 1rem;
   margin-bottom: 8px;
-  color: #1f2937; /* gray-800 */
+  color: #1f2937;
 }
 
 .taskcard-desc {
   font-size: 0.875rem;
-  color: #4b5563; /* gray-600 */
+  color: #4b5563;
   margin-bottom: 12px;
+  line-height: 1.4;
 }
 
 .taskcard-input,
@@ -31,24 +32,24 @@
   width: 100%;
   padding: 8px 10px;
   font-size: 0.9rem;
-  border: 1px solid #d1d5db; /* gray-300 */
+  border: 1px solid #d1d5db;
   border-radius: 6px;
   margin-bottom: 10px;
-  background-color: #f9fafb; /* gray-50 */
+  background-color: #f9fafb;
   transition: border-color 0.2s;
 }
 
 .taskcard-input:focus,
 .taskcard-textarea:focus {
   outline: none;
-  border-color: #3b82f6; /* blue-500 */
+  border-color: #3b82f6;
   background-color: #fff;
 }
 
 .taskcard-btn-group {
   display: flex;
   gap: 10px;
-  margin-top: 4px;
+  margin-top: 12px;
 }
 
 .taskcard-btn-save,
@@ -62,21 +63,21 @@
 }
 
 .taskcard-btn-save {
-  background-color: #3b82f6; /* blue-500 */
+  background-color: #3b82f6;
   color: white;
 }
 
 .taskcard-btn-save:hover {
-  background-color: #2563eb; /* blue-600 */
+  background-color: #2563eb;
 }
 
 .taskcard-btn-cancel {
-  background-color: #9ca3af; /* gray-400 */
+  background-color: #9ca3af;
   color: white;
 }
 
 .taskcard-btn-cancel:hover {
-  background-color: #6b7280; /* gray-500 */
+  background-color: #6b7280;
 }
 
 .taskcard-btn-edit,
@@ -108,4 +109,81 @@
 
 .taskcard-btn-delete:hover {
   background-color: #fecaca;
+}
+
+/* Assignees section */
+.taskcard-assignees {
+  margin: 12px 0;
+  padding: 8px 12px;
+  background-color: #f8fafc;
+  border-radius: 6px;
+  border-left: 3px solid #e2e8f0;
+}
+
+.taskcard-assignees-list {
+  margin: 8px 0 0 0;
+  padding-left: 1rem;
+  list-style-type: none;
+}
+
+.taskcard-assignee {
+  padding: 4px 0;
+  font-size: 0.85rem;
+  color: #334155;
+  display: flex;
+  align-items: center;
+}
+
+.taskcard-assignee:before {
+  content: "•";
+  color: #64748b;
+  margin-right: 8px;
+}
+
+/* User assignment controls */
+.taskcard-assign-control {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.taskcard-assign-label {
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.taskcard-user-dropdown {
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 200px;
+}
+
+.taskcard-user-dropdown:focus {
+  outline: none;
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 2px #bfdbfe;
+}
+
+.taskcard-user-dropdown option {
+  padding: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .taskcard-assign-control {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .taskcard-user-dropdown {
+    width: 100%;
+  }
 }

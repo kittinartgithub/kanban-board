@@ -14,6 +14,7 @@ class TaskAssigneeOut(BaseModel):
     id: int
     user_id: int
     assigned_at: datetime
+    user: UserOutSchema
 
     class Config:
         from_attributes = True
@@ -28,6 +29,7 @@ class TaskUpdateSchema(BaseModel):
     description: Optional[str] = None
     column_id: Optional[int] = None
     position: Optional[int] = None
+    assignee_id: Optional[int] = None
 
 # สำหรับแสดง Task + assignees
 class TaskOutSchema(BaseModel):

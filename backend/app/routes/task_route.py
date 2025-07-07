@@ -19,6 +19,9 @@ from fastapi.security import OAuth2PasswordBearer
 from app.models.task_model import TaskModel, TaskAssigneeModel
 from app.schemas.task_schemas import AssignUserSchema, TaskAssigneeOut
 
+from app.schemas.user_schemas import UserOutSchema
+
+
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
@@ -67,14 +70,29 @@ def update_task(
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
 
+    # ตรวจสอบว่ามีการเปลี่ยนแปลง assignee หรือไม่
     is_new_assignee = False
-    if data.assignee_id is not None and data.assignee_id != task.assignee_id:
-        is_new_assignee = True
+    if data.assignee_id is not None:
+        # ตรวจสอบว่ายังไม่มี assignee นี้อยู่
+        existing = db.query(TaskAssigneeModel).filter_by(
+            task_id=task_id, 
+            user_id=data.assignee_id
+        ).first()
+        if not existing:
+            is_new_assignee = True
+            # สร้าง assignment ใหม่
+            assignment = TaskAssigneeModel(
+                task_id=task_id,
+                user_id=data.assignee_id
+            )
+            db.add(assignment)
 
-    for attr, value in data.dict(exclude_unset=True).items():
+    # อัพเดท fields อื่นๆ
+    for attr, value in data.dict(exclude_unset=True, exclude={"assignee_id"}).items():
         setattr(task, attr, value)
 
     db.commit()
+    db.refresh(task)
 
     if is_new_assignee:
         notification = NotificationModel(
@@ -139,47 +157,36 @@ from app.models.task_model import TaskModel, TaskAssigneeModel
 from app.schemas.task_schemas import AssignUserSchema, TaskAssigneeOut
 
 # ✅ Assign user to task
-@router.post("/{task_id}/assign", response_model=TaskAssigneeOut)
-def assign_user_to_task(
-    task_id: int,
-    data: AssignUserSchema,
-    db: Session = Depends(get_db),
-    user_id: int = Depends(get_current_user_id)
-):
-    task = db.query(TaskModel).filter(TaskModel.id == task_id).first()
+@router.post("/tasks/{task_id}/assign")
+def assign_user_to_task(task_id: int, user_id: int, db: Session = Depends(get_db)):
+    task = db.query(Task).filter(Task.id == task_id).first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
+    
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # ตรวจสอบว่า user นี้ถูกมอบหมายงานแล้วหรือยัง
+    if user in task.assignees:
+        raise HTTPException(status_code=400, detail="User already assigned to this task")
+    
+    task.assignees.append(user)  # เพิ่มผู้ใช้เข้าไปใน assignees
 
-    # ตรวจว่า user อยู่ในบอร์ดนี้ไหม
-    board = db.query(BoardModel).join(ColumnModel).filter(ColumnModel.id == task.column_id).first()
-    if not board or data.user_id not in [member.id for member in board.members]:
-        raise HTTPException(status_code=403, detail="User ไม่ได้อยู่ในบอร์ดนี้")
-
-    # ป้องกันการ assign ซ้ำ
-    existing = db.query(TaskAssigneeModel).filter_by(task_id=task_id, user_id=data.user_id).first()
-    if existing:
-        raise HTTPException(status_code=400, detail="User นี้ได้รับมอบหมายอยู่แล้ว")
-
-    assignment = TaskAssigneeModel(task_id=task_id, user_id=data.user_id)
-    db.add(assignment)
-
-    # 🔔 แจ้งเตือน
-    assigner = db.query(UserModel).filter(UserModel.id == user_id).first()
-    board_name = board.name if board else ""
-
-    notification = NotificationModel(
-        user_id=data.user_id,
-        title="คุณถูกมอบหมายให้ดูแล Task",
-        message=f"Task: {task.name}",
-        type="task",
-        related_id=task.id,
-        board_name=board_name,
-        inviter_name=assigner.full_name if assigner else None
-    )
-    db.add(notification)
-
+    # บันทึกข้อมูลในฐานข้อมูล
     db.commit()
-    db.refresh(assignment)
+    db.refresh(task)  # รีเฟรชข้อมูล task เพื่อให้แน่ใจว่าได้ข้อมูลล่าสุด
 
-    return assignment
+    return task
 
+
+@router.post("/tasks/{task_id}/assign", response_model=UserOutSchema)
+def assign_user(task_id: int, assign_data: AssignUserSchema, db: Session = Depends(get_db)):
+    # ... logic assign user ...
+    # ตรวจสอบว่าผู้ใช้ถูก assign แล้วหรือยัง
+
+    # สร้าง TaskAssigneeModel และบันทึก db
+
+    # ดึง user ที่ถูก assign
+    user = db.query(UserModel).filter(UserModel.id == assign_data.user_id).first()
+    return user

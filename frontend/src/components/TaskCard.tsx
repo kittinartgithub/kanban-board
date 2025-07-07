@@ -1,84 +1,46 @@
-// D:\Data\INTERNSHIP\kanban-board\frontend\src\components\TaskCard.tsx
 import React, { useState, useEffect } from "react";
-// import { Tag, getTaskTags, getTags, assignTagsToTask, createTag } from "../api/tags"; // ปิดการใช้งาน tag
-import "../styles/TaskCard.css"; 
+import "../styles/TaskCard.css";
+
+interface User {
+  id: number;
+  username: string;
+  first_name?: string;
+  last_name?: string;
+}
 
 interface Task {
   id: number;
   name: string;
   description?: string;
+  assignees?: User[];
 }
 
 interface Props {
   task: Task;
+  index: number;
   onEdit: (id: number, name: string, description: string) => void;
   onDelete: (id: number) => void;
+  users: User[];
+  onAssignUser: (taskId: number, userId: number) => void;
 }
 
-const TaskCard: React.FC<Props> = ({ task, onEdit, onDelete }) => {
+const TaskCard: React.FC<Props> = ({ task, onEdit, onDelete, users, onAssignUser }) => {
   const [editMode, setEditMode] = useState(false);
   const [name, setName] = useState(task.name);
   const [description, setDescription] = useState(task.description || "");
-
-  // const [tags, setTags] = useState<Tag[]>([]);
-  // const [allTags, setAllTags] = useState<Tag[]>([]);
-  // const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
-  // const [newTagName, setNewTagName] = useState("");
 
   useEffect(() => {
     // loadData(); // 🔒 ปิดการโหลด tag
   }, [task.id]);
 
-  /*
-  const loadData = async () => {
-    try {
-      const [taskTags, allTagsData] = await Promise.all([
-        getTaskTags(task.id),
-        getTags()
-      ]);
-
-      setTags(taskTags);
-      setAllTags(allTagsData);
-      setSelectedTagIds(taskTags.map(tag => tag.id));
-    } catch (error) {
-      console.error("Error loading data:", error);
-    }
-  };
-  */
-
   const handleSave = async () => {
     try {
       onEdit(task.id, name, description);
-      // await assignTagsToTask(task.id, selectedTagIds); // 🔒 ปิดการผูก tag
-      // await loadData();
       setEditMode(false);
     } catch (error) {
       console.error("Error saving:", error);
     }
   };
-
-  /*
-  const handleCreateTag = async () => {
-    if (!newTagName.trim()) return;
-
-    try {
-      const newTag = await createTag(newTagName);
-      setAllTags([...allTags, newTag]);
-      setSelectedTagIds([...selectedTagIds, newTag.id]);
-      setNewTagName("");
-    } catch (error) {
-      console.error("Error creating tag:", error);
-    }
-  };
-
-  const toggleTag = (tagId: number) => {
-    setSelectedTagIds(prev =>
-      prev.includes(tagId)
-        ? prev.filter(id => id !== tagId)
-        : [...prev, tagId]
-    );
-  };
-  */
 
   if (editMode) {
     return (
@@ -96,8 +58,18 @@ const TaskCard: React.FC<Props> = ({ task, onEdit, onDelete }) => {
           placeholder="รายละเอียด"
         />
 
-        {/* 🔒 แท็ก */}
-        {/* ... */}
+        {task.assignees && task.assignees.length > 0 && (
+          <div className="taskcard-assignees">
+            <strong>👥 ผู้รับผิดชอบ:</strong>
+            <ul className="taskcard-assignees-list">
+              {task.assignees.map(user => (
+                <li key={user.id} className="taskcard-assignee">
+                  {user.first_name || ""} {user.last_name || ""} ({user.username})
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className="taskcard-btn-group">
           <button onClick={handleSave} className="taskcard-btn-save">บันทึก</button>
@@ -112,8 +84,42 @@ const TaskCard: React.FC<Props> = ({ task, onEdit, onDelete }) => {
       <h4 className="taskcard-title">{task.name}</h4>
       {description && <p className="taskcard-desc">{description}</p>}
 
-      {/* 🔒 แสดงแท็ก */}
-      {/* ... */}
+      {task.assignees && task.assignees.length > 0 && (
+        <div className="taskcard-assignees">
+          <strong>👥 ผู้รับผิดชอบ:</strong>
+          <ul className="taskcard-assignees-list">
+            {task.assignees.map((user) => (
+              <li key={user.id} className="taskcard-assignee">
+                {user.first_name || ""} {user.last_name || ""} ({user.username})
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <div className="taskcard-assign-control">
+        <label htmlFor={`assign-user-${task.id}`} className="taskcard-assign-label">
+          <strong>มอบหมายผู้ใช้:</strong>
+        </label>
+        <select
+          id={`assign-user-${task.id}`}
+          defaultValue=""
+          onChange={(e) => {
+            const userId = Number(e.target.value);
+            if (userId) {
+              onAssignUser(task.id, userId);
+            }
+          }}
+          className="taskcard-user-dropdown"
+        >
+          <option value="" disabled>เลือกผู้ใช้</option>
+          {users.map((user) => (
+            <option key={user.id} value={user.id}>
+              {user.first_name || ""} {user.last_name || ""} ({user.username})
+            </option>
+          ))}
+        </select>
+      </div>
 
       <div className="taskcard-btn-group">
         <button onClick={() => setEditMode(true)} className="taskcard-btn-edit">แก้ไข</button>
@@ -121,6 +127,6 @@ const TaskCard: React.FC<Props> = ({ task, onEdit, onDelete }) => {
       </div>
     </div>
   );
-};
+}
 
 export default TaskCard;

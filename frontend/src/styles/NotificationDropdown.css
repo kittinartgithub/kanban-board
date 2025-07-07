@@ -43,8 +43,40 @@
   border-radius: 4px;
 }
 
+.noti-item.invitation {
+  background-color: #fff3e6; /* สีพื้นหลังสำหรับคำเชิญ */
+}
+
+.noti-item.task-assigned {
+  background-color: #d9f7be; /* สีพื้นหลังสำหรับมอบหมายงาน */
+}
+
 .noti-item:hover {
   background-color: #f0f0f0;
+}
+
+.noti-actions button {
+  background-color: #4CAF50; /* สีปกติ */
+  color: white;
+}
+
+.noti-actions button.disabled-btn {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.noti-actions button:active {
+  background-color: #388e3c; /* สีกด */
+}
+
+
+.disabled-btn {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.disabled-btn:hover {
+  background-color: #ccc;
 }
 
 .noti-item:last-child {

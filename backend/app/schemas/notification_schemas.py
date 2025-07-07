@@ -15,5 +15,6 @@ class NotificationOutSchema(BaseModel):
     board_name: Optional[str]  # เพิ่มฟิลด์ board_name
     inviter_name: Optional[str]  # เพิ่มฟิลด์ inviter_name
 
+    extra_data: Optional[dict]
     class Config:
         from_attributes = True

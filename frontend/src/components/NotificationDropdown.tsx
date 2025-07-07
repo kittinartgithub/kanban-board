@@ -12,6 +12,12 @@ interface Notification {
   related_id: number; // เพิ่มเพื่อเก็บ invite_id
   board_name: string; // ชื่อบอร์ด
   inviter_name: string; // ชื่อผู้เชิญ
+
+  extra_data?: {
+    task_name?: string;
+    column_name?: string;
+    assigner_name?: string;
+  };
 }
 
 const NotificationDropdown: React.FC = () => {
@@ -52,6 +58,9 @@ const NotificationDropdown: React.FC = () => {
         setNotifications((prevNotifications) =>
           prevNotifications.filter((n) => n.id !== inviteId) // ลบ notification หลังตอบรับ
         );
+        if (status === "accepted") {
+          alert("คุณตอบรับคำเชิญแล้ว"); // แสดงข้อความหลังตอบรับ
+        }
       })
       .catch((error) => {
         console.error("Error responding to invitation:", error);
@@ -73,28 +82,43 @@ const NotificationDropdown: React.FC = () => {
             </div>
           ) : (
             notifications.map((n) => (
-              <div key={n.id} className="noti-item">
+              <div
+                key={n.id}
+                className={`noti-item ${n.title === "คุณได้รับคำเชิญเข้าร่วมบอร์ด" ? "invitation" : "task-assigned"}`}
+              >
                 <strong>{n.title}</strong>
                 <p>{n.message}</p>
                 <span>{new Date(n.created_at).toLocaleString()}</span>
-                <div>
-                  <strong>บอร์ด: </strong>{n.board_name}
-                </div>
-                <div>
-                  <strong>เชิญโดย: </strong>{n.inviter_name}
-                </div>
+                
+                {n.title === "คุณได้รับมอบหมายงานใหม่" && (
+                  <>
+                    <div><strong>บอร์ด: </strong>{n.board_name}</div>
+                    <div><strong>มอบหมายโดย: </strong>{n.extra_data?.assigner_name}</div>
+                  </>
+                )}
+                
                 <div className="noti-actions">
                   {n.is_read ? (
                     <span>✅ การตอบรับแล้ว</span>
                   ) : (
-                    <>
-                      <button onClick={() => handleRespondInvitation(n.related_id, "accepted")}>
-                        ตอบรับ
-                      </button>
-                      <button onClick={() => handleRespondInvitation(n.related_id, "declined")}>
-                        ปฏิเสธ
-                      </button>
-                    </>
+                    n.title === "คุณได้รับคำเชิญเข้าร่วมบอร์ด" ? (
+                      <>
+                        <button 
+                          onClick={() => handleRespondInvitation(n.related_id, "accepted")} 
+                          disabled={n.is_read}
+                          className={n.is_read ? "disabled-btn" : ""}
+                        >
+                          ตอบรับ
+                        </button>
+                        <button 
+                          onClick={() => handleRespondInvitation(n.related_id, "declined")} 
+                          disabled={n.is_read}
+                          className={n.is_read ? "disabled-btn" : ""}
+                        >
+                          ปฏิเสธ
+                        </button>
+                      </>
+                    ) : null
                   )}
                 </div>
               </div>

@@ -104,7 +104,7 @@ const KanbanPage: React.FC = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      
+
       console.log("✅ ข้อมูลสมาชิกที่ได้รับ:", response.data);
       setUsers(response.data);
       setError(null);
@@ -192,6 +192,11 @@ const KanbanPage: React.FC = () => {
     const [movedTask] = sourceTasks.splice(source.index, 1);
     destTasks.splice(destination.index, 0, movedTask);
 
+
+    sourceCol.tasks = sourceTasks;
+    destCol.tasks = destTasks;
+    setColumns(updatedColumns);
+
     try {
       await updateTask(taskId, {
         column_id: destColId,
@@ -217,6 +222,15 @@ const KanbanPage: React.FC = () => {
     }
   }, [boardId]);
 
+  const handleAssignUser = async (taskId: number, userId: number) => {
+    try {
+      await updateTask(taskId, { assignee_id: userId });
+      fetchColumns();
+    } catch (err) {
+      console.error("มอบหมายงานไม่สำเร็จ:", err);
+    }
+  };
+
   return (
     <div className="kanban-page" style={{ background: backgroundGradient }}>
       <h2 className="kanban-header">{boardName ? `บอร์ด: ${boardName}` : `บอร์ด #${boardId}`}</h2>
@@ -229,10 +243,10 @@ const KanbanPage: React.FC = () => {
       )}
 
       {/* แสดงสมาชิกที่มีสิทธิ์ในบอร์ด */}
-      <div className="members-list" style={{ 
-        background: 'rgba(255, 255, 255, 0.9)', 
-        padding: '15px', 
-        borderRadius: '8px', 
+      <div className="members-list" style={{
+        background: 'rgba(255, 255, 255, 0.9)',
+        padding: '15px',
+        borderRadius: '8px',
         marginBottom: '20px',
         boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
       }}>
@@ -288,6 +302,8 @@ const KanbanPage: React.FC = () => {
                 onAddTask={handleAddTask}
                 onEditTask={handleEditTask}
                 onDeleteTask={handleDeleteTask}
+                users={users}  // เพิ่มส่ง users
+                onAssignUser={handleAssignUser} // เพิ่มส่งฟังก์ชัน assign user
               />
             ))}
 

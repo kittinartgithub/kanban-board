@@ -4,10 +4,17 @@ import { Droppable, Draggable } from "@hello-pangea/dnd";
 import TaskCard from "./TaskCard";
 import "../styles/Column.css";
 
+interface User {
+  id: number;
+  username: string;
+  first_name?: string;
+  last_name?: string;
+}
 interface Task {
   id: number;
   name: string;
   description?: string;
+  assignees?: User[];
 }
 
 interface ColumnProps {
@@ -20,6 +27,8 @@ interface ColumnProps {
   onAddTask: (columnId: number, taskName: string) => void;
   onEditTask: (taskId: number, updates: Partial<Task>) => void;
   onDeleteTask: (taskId: number) => void;
+  users: User[]; // เพิ่ม prop สำหรับผู้ใช้
+  onAssignUser: (taskId: number, userId: number) => void;
 }
 
 const Column: React.FC<ColumnProps> = ({
@@ -32,6 +41,8 @@ const Column: React.FC<ColumnProps> = ({
   onAddTask,
   onEditTask,
   onDeleteTask,
+  users,
+  onAssignUser,
 }) => {
   const [editMode, setEditMode] = useState(false);
   const [columnName, setColumnName] = useState(name);
@@ -113,10 +124,13 @@ const Column: React.FC<ColumnProps> = ({
                   >
                     <TaskCard
                       task={task}
-                      onEdit={(id, name, desc) =>
+                      index={index}
+                      onEdit={(id: number, name: string, desc: string) =>
                         onEditTask(id, { name, description: desc })
                       }
                       onDelete={onDeleteTask}
+                      users={users} // ✅ ส่ง users ไป
+                      onAssignUser={onAssignUser} // ✅ ส่งฟังก์ชัน assign ไป
                     />
                   </div>
                 )}
