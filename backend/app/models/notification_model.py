@@ -1,5 +1,4 @@
 # app/models/notification_model.py
-
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime, func
 from app.database import Base
 
@@ -15,3 +14,7 @@ class NotificationModel(Base):
     is_read = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     read_at = Column(DateTime(timezone=True), nullable=True)
+
+    # เพิ่มฟิลด์ใหม่
+    board_name = Column(String(255), nullable=True)  # ชื่อบอร์ด
+    inviter_name = Column(String(255), nullable=True)  # ชื่อผู้เชิญ

@@ -9,7 +9,7 @@ engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 Base = declarative_base()
 
-# ✅ ใช้ร่วมในทุกไฟล์ที่ต้องการ Session
+#  ใช้ร่วมในทุกไฟล์ที่ต้องการ Session
 def get_db():
     db = SessionLocal()
     try:

@@ -25,7 +25,7 @@ def get_current_user_id(token: str = Depends(oauth2_scheme)):
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-# ✅ สร้าง Board
+#  สร้าง Board
 @router.post("/", response_model=BoardOutSchema)
 def create_board(data: BoardCreateSchema, db: Session = Depends(get_db), user_id: int = Depends(get_current_user_id)):
     board = BoardModel(name=data.name, owner_id=user_id)
@@ -41,7 +41,7 @@ def create_board(data: BoardCreateSchema, db: Session = Depends(get_db), user_id
         members=[u.id for u in board.members]
     )
 
-# ✅ แก้ชื่อ Board
+#  แก้ชื่อ Board
 @router.put("/{board_id}", response_model=BoardOutSchema)
 def rename_board(board_id: int, data: BoardUpdateSchema, db: Session = Depends(get_db), user_id: int = Depends(get_current_user_id)):
     board = db.query(BoardModel).filter(BoardModel.id == board_id).first()
@@ -56,7 +56,7 @@ def rename_board(board_id: int, data: BoardUpdateSchema, db: Session = Depends(g
         members=[u.id for u in board.members]
     )
 
-# ✅ ลบ Board
+#  ลบ Board
 @router.delete("/{board_id}")
 def delete_board(board_id: int, db: Session = Depends(get_db), user_id: int = Depends(get_current_user_id)):
     board = db.query(BoardModel).filter(BoardModel.id == board_id).first()
@@ -66,7 +66,7 @@ def delete_board(board_id: int, db: Session = Depends(get_db), user_id: int = De
     db.commit()
     return {"detail": "Board deleted"}
 
-# ✅ เชิญสมาชิก
+#  เชิญสมาชิก
 @router.post("/{board_id}/invite", response_model=BoardOutSchema)
 def invite_member(board_id: int, invite: BoardInviteSchema, db: Session = Depends(get_db), user_id: int = Depends(get_current_user_id)):
     board = db.query(BoardModel).filter(BoardModel.id == board_id).first()
@@ -86,7 +86,7 @@ def invite_member(board_id: int, invite: BoardInviteSchema, db: Session = Depend
         members=[u.id for u in board.members]
     )
 
-# ✅ ดูบอร์ดที่ตัวเองมีส่วนร่วม
+#  ดูบอร์ดที่ตัวเองมีส่วนร่วม
 @router.get("/", response_model=List[BoardOutSchema])
 def get_my_boards(db: Session = Depends(get_db), user_id: int = Depends(get_current_user_id)):
     user = db.query(UserModel).get(user_id)

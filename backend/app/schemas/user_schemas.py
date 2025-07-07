@@ -1,3 +1,4 @@
+# D:\Data\INTERNSHIP\kanban-board\backend\app\schemas\user_schemas.py
 from pydantic import BaseModel, EmailStr
 
 class UserCreateSchema(BaseModel):

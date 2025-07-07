@@ -1,5 +1,4 @@
-// src/api/boards.ts
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
@@ -49,4 +48,45 @@ export const deleteBoard = async (boardId: number) => {
     },
   });
   return response.data;
+};
+
+export const respondToInvitation = async (inviteId: number, status: "accepted" | "declined") => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("Token is missing or invalid.");
+  }
+
+  try {
+    const res = await axios.put(
+      `${API_URL}/invitations/${inviteId}/respond`,
+      { status },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log("Response data: ", res.data);  // Logging response for debugging
+    return res.data;
+  } catch (error) {
+    // การจัดการ error เมื่อเกิด AxiosError
+    if (error instanceof AxiosError) {
+      console.error("Error responding to invitation: ", error.response || error);
+
+      // ตรวจสอบว่ามี `detail` ใน `data` หรือไม่
+      const errorDetail = error.response?.data?.detail;
+      if (errorDetail) {
+        throw new Error(errorDetail);
+      } else {
+        // เพิ่มข้อมูลเพิ่มเติมเมื่อเกิด error
+        const statusCode = error.response?.status;
+        const message = error.response?.data?.message || "An error occurred while responding to invitation.";
+        throw new Error(`Error: ${message}, Status: ${statusCode}`);
+      }
+    } else {
+      console.error("An unknown error occurred", error);
+      throw new Error("An unknown error occurred.");
+    }
+  }
 };

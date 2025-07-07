@@ -12,6 +12,8 @@ class NotificationOutSchema(BaseModel):
     related_id: Optional[int]
     is_read: bool
     created_at: datetime
+    board_name: Optional[str]  # เพิ่มฟิลด์ board_name
+    inviter_name: Optional[str]  # เพิ่มฟิลด์ inviter_name
 
     class Config:
         from_attributes = True

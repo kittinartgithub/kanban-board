@@ -44,3 +44,13 @@ def clear_all_notifications(db: Session = Depends(get_db), user_id: int = Depend
     db.query(NotificationModel).filter(NotificationModel.user_id == user_id).delete()
     db.commit()
     return {"detail": "All notifications cleared"}
+
+#  ดึงเฉพาะแจ้งเตือนที่ยังไม่อ่าน
+@router.get("/unread", response_model=List[NotificationOutSchema])
+def get_unread_notifications(db: Session = Depends(get_db), user_id: int = Depends(get_current_user_id)):
+    unread = db.query(NotificationModel)\
+        .filter(NotificationModel.user_id == user_id)\
+        .filter(NotificationModel.is_read == False)\
+        .order_by(NotificationModel.created_at.desc())\
+        .all()
+    return unread

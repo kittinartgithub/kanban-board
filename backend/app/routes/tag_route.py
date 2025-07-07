@@ -6,7 +6,7 @@ from typing import List
 from app.database import get_db
 from app.models.tag_model import TagModel
 from app.models.task_model import TaskModel
-from app.schemas.tag_schemas import TagSchema, TagOutSchema  # เปลี่ยนจาก TagOut
+from app.schemas.tag_schemas import TagSchema, TagOutSchema  
 from app.core.security import SECRET_KEY, ALGORITHM
 from jose import jwt, JWTError
 from fastapi.security import OAuth2PasswordBearer
@@ -21,8 +21,8 @@ def get_current_user_id(token: str = Depends(oauth2_scheme)):
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-# ✅ POST: สร้าง Tag
-@router.post("/", response_model=TagOutSchema)  # เปลี่ยนจาก TagOut
+#  POST: สร้าง Tag
+@router.post("/", response_model=TagOutSchema) 
 def create_tag(
     data: TagSchema,
     db: Session = Depends(get_db),
@@ -34,23 +34,23 @@ def create_tag(
     db.refresh(tag)
     return tag
 
-# ✅ GET: ดึง Tag ทั้งหมด
-@router.get("/", response_model=List[TagOutSchema])  # เปลี่ยนจาก TagOut
+#  GET: ดึง Tag ทั้งหมด
+@router.get("/", response_model=List[TagOutSchema])  
 def get_tags(
     db: Session = Depends(get_db),
     user_id: int = Depends(get_current_user_id),
 ):
     return db.query(TagModel).all()
 
-# ✅ GET: ดึง Tag ที่ผูกกับ Task
-@router.get("/tasks/{task_id}", response_model=List[TagOutSchema])  # เปลี่ยนจาก TagOut
+#  GET: ดึง Tag ที่ผูกกับ Task
+@router.get("/tasks/{task_id}", response_model=List[TagOutSchema])  
 def get_tags_for_task(task_id: int, db: Session = Depends(get_db)):
     task = db.query(TaskModel).filter(TaskModel.id == task_id).first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     return task.tags
 
-# ✅ POST: ผูก Tag กับ Task
+#  POST: ผูก Tag กับ Task
 @router.post("/tasks/{task_id}/{tag_id}")
 def add_tag_to_task(task_id: int, tag_id: int, db: Session = Depends(get_db)):
     task = db.query(TaskModel).filter(TaskModel.id == task_id).first()
@@ -63,7 +63,7 @@ def add_tag_to_task(task_id: int, tag_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"detail": "Tag added to task"}
 
-# ✅ DELETE: ลบ Tag ออกจาก Task
+#  DELETE: ลบ Tag ออกจาก Task
 @router.delete("/tasks/{task_id}/{tag_id}")
 def remove_tag_from_task(task_id: int, tag_id: int, db: Session = Depends(get_db)):
     task = db.query(TaskModel).filter(TaskModel.id == task_id).first()

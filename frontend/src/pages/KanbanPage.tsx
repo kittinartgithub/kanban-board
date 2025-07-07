@@ -1,4 +1,3 @@
-// src/pages/KanbanPage.tsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -22,6 +21,19 @@ interface ColumnType {
   tasks: Task[];
 }
 
+const gradientOptions = [
+  { label: "ม่วง-น้ำเงิน", value: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" },
+  { label: "ชมพู-แดง", value: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)" },
+  { label: "เขียว-ฟ้า", value: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)" },
+  { label: "ฟ้า-น้ำเงินเข้ม", value: "linear-gradient(135deg, #30cfd0 0%, #330867 100%)" },
+
+  { label: "พาสเทล ฟ้า-ชมพู", value: "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)" },
+  { label: "พาสเทล เหลือง-ส้ม", value: "linear-gradient(135deg, #fddb92 0%, #d1fdff 100%)" },
+  { label: "พาสเทล เขียว-ฟ้า", value: "linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)" },
+  { label: "พาสเทล ชมพู-ม่วง", value: "linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)" },
+  { label: "พาสเทล ม่วง-ฟ้า", value: "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)" },
+];
+
 const KanbanPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const boardId = Number(id);
@@ -29,6 +41,10 @@ const KanbanPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [newColumnName, setNewColumnName] = useState("");
   const [boardName, setBoardName] = useState("");
+  const [backgroundGradient, setBackgroundGradient] = useState(
+    localStorage.getItem("kanbanGradient") || gradientOptions[0].value
+  );
+
   const token = localStorage.getItem("token");
 
   const fetchColumns = async () => {
@@ -155,14 +171,37 @@ const KanbanPage: React.FC = () => {
     }
   };
 
+  const handleGradientChange = (value: string) => {
+    setBackgroundGradient(value);
+    localStorage.setItem("kanbanGradient", value);
+  };
+
   useEffect(() => {
     fetchColumns();
     fetchBoardName();
   }, [boardId]);
 
   return (
-    <div className="kanban-page">
+    <div className="kanban-page" style={{ background: backgroundGradient }}>
       <h2 className="kanban-header">{boardName ? `บอร์ด: ${boardName}` : `บอร์ด #${boardId}`}</h2>
+
+      <div className="gradient-selector">
+  <label htmlFor="gradientSelect" className="gradient-label">
+    🎨 พื้นหลัง:
+  </label>
+  <select
+    id="gradientSelect"
+    value={backgroundGradient}
+    onChange={(e) => handleGradientChange(e.target.value)}
+    className="gradient-dropdown"
+  >
+    {gradientOptions.map((option) => (
+      <option key={option.value} value={option.value}>
+        {option.label}
+      </option>
+    ))}
+  </select>
+</div>
 
       {loading ? (
         <p className="kanban-loading">กำลังโหลด...</p>

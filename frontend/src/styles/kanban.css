@@ -1,10 +1,46 @@
 /* พื้นหลังและ spacing ของหน้า Kanban */
 .kanban-page {
   padding: 24px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
   position: relative;
 }
+
+.gradient-selector {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(6px);
+  border-radius: 12px;
+  padding: 10px 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.gradient-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.gradient-dropdown {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+  background: white;
+  color: #333;
+  outline: none;
+}
+
+.gradient-dropdown:hover {
+  border-color: #667eea;
+}
+
 
 .kanban-page::before {
   content: '';

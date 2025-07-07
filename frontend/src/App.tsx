@@ -1,9 +1,14 @@
-// src/App.tsx
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import BoardPage from "./pages/BoardPage";
 import KanbanPage from "./pages/KanbanPage";
+import InvitationPage from "./pages/InvitationPage";
 import Navbar from "./components/Navbar";
 
 function App() {
@@ -23,11 +28,15 @@ function App() {
           path="/boards/:id"
           element={token ? <KanbanPage /> : <Navigate to="/login" />}
         />
-        {/* default redirect */}
+        <Route
+          path="/invitations"
+          element={token ? <InvitationPage /> : <Navigate to="/login" />}
+        />
         <Route
           path="/"
           element={<Navigate to={token ? "/boards" : "/login"} />}
         />
+        
       </Routes>
     </Router>
   );

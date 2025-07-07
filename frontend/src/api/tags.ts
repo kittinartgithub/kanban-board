@@ -18,7 +18,7 @@ const handleApiError = (error: any) => {
   throw error;
 };
 
-// ✅ ดึงแท็กทั้งหมด
+//  ดึงแท็กทั้งหมด
 export const getTags = async (): Promise<Tag[]> => {
   try {
     const token = localStorage.getItem("token");
@@ -38,7 +38,7 @@ export const getTags = async (): Promise<Tag[]> => {
   }
 };
 
-// ✅ ดึงแท็กที่อยู่ใน Task
+//  ดึงแท็กที่อยู่ใน Task
 export const getTaskTags = async (taskId: number): Promise<Tag[]> => {
   try {
     const token = localStorage.getItem("token");
@@ -58,7 +58,7 @@ export const getTaskTags = async (taskId: number): Promise<Tag[]> => {
   }
 };
 
-// ✅ สร้างแท็กใหม่
+//  สร้างแท็กใหม่
 export const createTag = async (name: string): Promise<Tag> => {
   try {
     const token = localStorage.getItem("token");
@@ -80,7 +80,7 @@ export const createTag = async (name: string): Promise<Tag> => {
   }
 };
 
-// ✅ ผูกหลายแท็กกับ Task
+//  ผูกหลายแท็กกับ Task
 export const assignTagsToTask = async (taskId: number, tagIds: number[]): Promise<void> => {
   try {
     const token = localStorage.getItem("token");
