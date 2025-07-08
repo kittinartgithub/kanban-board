@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:1234@db:5432/kanban_db
+    depends_on:
+      - db
+    restart: unless-stopped
+    volumes:
+      - ./backend:/app  
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"  
+    volumes:
+      - ./frontend:/app  
+    command: npm start
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: kanban_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432" 
+
+volumes:
+  postgres_data:
