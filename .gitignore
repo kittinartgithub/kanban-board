@@ -1,0 +1,25 @@
+#  Node.js (frontend)
+**/node_modules/
+**/dist/
+**/build/
+**/.vite/
+
+#  Python (backend)
+**/__pycache__/
+*.py[cod]
+
+#  Env files
+*.env
+*.env.*
+
+#  Logs
+*.log
+
+#  Coverage / Testing
+coverage/
+
+#  OS
+.DS_Store
+
+# #  Railway or custom build tools
+# railway.json
